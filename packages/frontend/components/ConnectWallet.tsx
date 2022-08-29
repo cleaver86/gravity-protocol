@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Image,
   Modal,
   ModalBody,
@@ -14,27 +15,13 @@ import { useEthers } from '@usedapp/core'
 import React from 'react'
 import { walletconnect, walletlink } from '../lib/connectors'
 
-function ConnectWallet(): JSX.Element {
+function ConnectWallet({ onConnect }): JSX.Element {
   const { activate, activateBrowserWallet } = useEthers()
-
   const { onOpen, isOpen, onClose } = useDisclosure()
 
   return (
-    <>
-      <Box
-        order={[-1, null, null, 2]}
-        textAlign={['left', null, null, 'right']}
-      >
-        <Button colorScheme="teal" variant="outline" onClick={onOpen}>
-          Connect to a wallet
-        </Button>
-      </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Connect to a wallet</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+    <Flex height="100%" direction="column" alignItems="center" justifyContent="center">
+
             <Button
               justifyContent="space-between"
               width="100%"
@@ -50,6 +37,7 @@ function ConnectWallet(): JSX.Element {
               }
               onClick={() => {
                 activateBrowserWallet()
+                onConnect('metaMask');
               }}
             >
               MetaMask
@@ -69,6 +57,7 @@ function ConnectWallet(): JSX.Element {
               }
               onClick={() => {
                 activate(walletconnect)
+                onConnect('walletConnect');
               }}
             >
               WalletConnect
@@ -82,20 +71,19 @@ function ConnectWallet(): JSX.Element {
               rightIcon={
                 <Image
                   maxWidth="20px"
-                  src="/images/logo-coinbase.jpg"
+                  src="/images/logo-coinbase.png"
                   alt="Coinbase Wallet"
                 />
               }
               onClick={() => {
                 activate(walletlink)
+                onConnect('coinbase');
               }}
             >
               Coinbase Wallet
             </Button>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+
+    </Flex>
   )
 }
 

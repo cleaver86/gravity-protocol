@@ -140,9 +140,9 @@ function HomeIndex(): JSX.Element {
   return (
     <Layout>
       <Heading as="h1" mb="8">
-        Next.js Ethereum Starter
+        Gravity
       </Heading>
-      <Button
+      {/* <Button
         as="a"
         size="lg"
         colorScheme="teal"
@@ -196,7 +196,7 @@ function HomeIndex(): JSX.Element {
         >
           Send Funds From Local Hardhat Chain
         </Button>
-      </Box>
+      </Box> */}
     </Layout>
   )
 }

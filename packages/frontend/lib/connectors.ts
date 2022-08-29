@@ -15,5 +15,5 @@ export const walletconnect = new WalletConnectConnector({
 export const walletlink = new WalletLinkConnector({
   url: RPC_URLS[1],
   appName: 'Coinbase',
-  supportedChainIds: [1, 3, 4, 5, 42, 10, 137, 69, 420, 80001],
+  networks: [1, 3, 4, 5, 42, 10, 137, 69, 420, 80001],
 })
