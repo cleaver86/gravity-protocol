@@ -6,21 +6,20 @@ import '@fontsource/poppins/700.css'
 import theme from '../theme'
 import { ApolloProvider } from '@apollo/client'
 import { ChakraProvider } from '@chakra-ui/react'
-import { Mainnet, DAppProvider, Config, Goerli } from '@usedapp/core'
-import { getDefaultProvider } from 'ethers'
+import { Mainnet, DAppProvider, Config } from '@usedapp/core'
 import type { AppProps } from 'next/app'
 import React from 'react'
-import { MulticallContract } from '../artifacts/contracts/contractAddress'
+// import { MulticallContract } from '../artifacts/contracts/contractAddress'
 import { useApollo } from '../lib/apolloClient'
 
 // scaffold-eth's INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
-export const INFURA_ID = '460f40a260564ac4a4f4b3fffb032dad'
+// export const INFURA_ID = '460f40a260564ac4a4f4b3fffb032dad'
 
 const config: Config = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
-    [Mainnet.chainId]: 'https://rpc.ankr.com/eth'
-  }
+    [Mainnet.chainId]: 'https://rpc.ankr.com/eth',
+  },
 }
 // const config: Config = {
 //   readOnlyUrls: {

@@ -1,6 +1,6 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme } from '@chakra-ui/react'
 
-const theme = extendTheme({ 
+const theme = extendTheme({
   config: {
     initialColorMode: 'dark',
     useSystemColorMode: false,
@@ -8,28 +8,28 @@ const theme = extendTheme({
   colors: {
     gray: {
       300: '#847D9F',
-      500: '#3A3060'
+      500: '#3A3060',
     },
     purple: {
       100: '#D079FF',
       300: '#4A3696',
       500: '#332567',
       700: '#251D32',
-      900: '#0C0911'
-    }
+      900: '#0C0911',
+    },
   },
   fonts: {
     heading: `'Poppins', sans-serif`,
     body: `'Poppins', sans-serif`,
   },
   fontWeights: {
-    medium: 500
+    medium: 500,
   },
   components: {
     Button: {
       sizes: {
         md: {
-          borderRadius: '20px'
+          borderRadius: '20px',
         },
       },
     },
@@ -37,7 +37,7 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: 'purple.700'
+        bg: 'purple.700',
       },
       a: {
         color: 'purple.100 !important',
@@ -46,7 +46,7 @@ const theme = extendTheme({
         },
       },
     },
-  }
+  },
 })
 
 export default theme

@@ -7,7 +7,7 @@ function WalletIcon({ name }): JSX.Element {
   const iconSrc = {
     metaMask: '/images/logo-metamask.png',
     coinbase: '/images/logo-coinbase.png',
-    walletConnect: '/images/logo-walletconnect.svg'
+    walletConnect: '/images/logo-walletconnect.svg',
   }
 
   return (
