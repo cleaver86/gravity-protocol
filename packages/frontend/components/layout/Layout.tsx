@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import Notifications from '../Notifications'
 import ConnectWallet from '../ConnectWallet'
 import Wallet from '../Wallet'
+import MainNav from './MainNav'
 import Head, { MetaProps } from './Head'
 
 // Extends `window` to add `ethereum`.
@@ -35,11 +36,16 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
       <Flex h="calc(100vh)" justify="space-between">
         {account ? (
           <>
-            <Box w="250px" h="100%">
-              test
+            <Box
+              w="250px"
+              h="100%"
+              borderRight="1px solid"
+              borderColor={'gray.500'}
+            >
+              <MainNav />
             </Box>
             <Box w="1100px" h="100%">
-              <Container h="100%" maxWidth="container.xl">
+              <Container h="100%" paddingTop="40px" maxWidth="container.xl">
                 {children}
                 <Notifications notifications={notifications} />
               </Container>

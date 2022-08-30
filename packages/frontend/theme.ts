@@ -7,6 +7,8 @@ const theme = extendTheme({
   },
   colors: {
     gray: {
+      100: '#E7EBF0',
+      200: '#BEBBC1',
       300: '#847D9F',
       500: '#3A3060',
     },
@@ -38,12 +40,6 @@ const theme = extendTheme({
     global: {
       body: {
         bg: 'purple.700',
-      },
-      a: {
-        color: 'purple.100 !important',
-        _hover: {
-          textDecoration: 'underline',
-        },
       },
     },
   },

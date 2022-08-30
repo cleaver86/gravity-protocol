@@ -3,7 +3,6 @@ import {
   chakra,
   Box,
   Button,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -23,6 +22,7 @@ import {
 } from '../utils/getPrices'
 import useInterval from '../hooks/useInterval'
 import currency from 'currency.js'
+import Link from './Link'
 import GrvtTokenIcon from '../public/images/token-grvt.svg'
 import VusdTokenIcon from '../public/images/token-vusd.svg'
 import EthTokenIcon from '../public/images/token-eth.svg'
@@ -134,7 +134,7 @@ function Wallet({ name, account, deactivate }): JSX.Element {
 
   return (
     <Flex h="100%" direction="column" justifyContent="space-between">
-      <Flex direction={'column'} padding="20px">
+      <Flex direction={'column'} padding="40px 20px 20px 20px">
         <Flex alignItems={'center'} marginBottom={'40px'}>
           <Label>Wallet</Label>
           <Spacer />
@@ -156,7 +156,7 @@ function Wallet({ name, account, deactivate }): JSX.Element {
                 <WalletIcon name={name} />
                 <Text>{shortenAddress(account)}</Text>
                 <Box marginLeft={'10px'}>
-                  <FaIcon icon={faAngleDown} />
+                  <FaIcon icon={faAngleDown} height="18px" />
                 </Box>
               </Flex>
             </MenuButton>

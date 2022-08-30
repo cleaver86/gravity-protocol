@@ -4,10 +4,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //import { faChevronDown } from '@fortawesome/free-regular-svg-icons'
 //import { faChevronDown } from '@fortawesome/pro-regular-svg-icons'
 
-const FaIcon = ({ icon }: { icon: IconDefinition }) => {
+const FaIcon = ({
+  icon,
+  height,
+  color,
+  _groupHover,
+}: {
+  icon: IconDefinition
+}) => {
   const Icon = chakra(FontAwesomeIcon)
 
-  return <Icon height="18px" icon={icon} />
+  return (
+    <Icon
+      height={height}
+      width="auto"
+      color={color}
+      icon={icon}
+      _groupHover={_groupHover}
+    />
+  )
+}
+
+FaIcon.defaultProps = {
+  color: 'gray.200',
 }
 
 export default FaIcon

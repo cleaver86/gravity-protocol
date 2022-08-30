@@ -1,11 +1,11 @@
-import { Heading } from '@chakra-ui/react'
 // import { ChainId, useEthers, useSendTransaction } from '@usedapp/core'
 // import { ethers, providers, utils } from 'ethers'
 import React from 'react'
 // import { YourContract as LOCAL_CONTRACT_ADDRESS } from '../artifacts/contracts/contractAddress'
 // import YourContract from '../artifacts/contracts/YourContract.sol/YourContract.json'
-import Layout from '../components/layout/Layout'
 // import { YourContract as YourContractType } from '../types/typechain'
+import IconHeading from '../components/IconHeading'
+import { faHome } from '@fortawesome/pro-regular-svg-icons'
 
 /**
  * Constants & Helpers
@@ -138,10 +138,9 @@ function HomeIndex(): JSX.Element {
   // }
 
   return (
-    <Layout>
-      <Heading as="h1" mb="8">
-        Gravity
-      </Heading>
+    <>
+      <IconHeading icon={faHome}>Home</IconHeading>
+      <text>This is the home section.</text>
       {/* <Button
         as="a"
         size="lg"
@@ -197,7 +196,7 @@ function HomeIndex(): JSX.Element {
           Send Funds From Local Hardhat Chain
         </Button>
       </Box> */}
-    </Layout>
+    </>
   )
 }
 
