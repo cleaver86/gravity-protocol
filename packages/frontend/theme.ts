@@ -16,9 +16,16 @@ const theme = extendTheme({
       100: '#D079FF',
       300: '#4A3696',
       500: '#332567',
+      600: '#2D2041',
       700: '#251D32',
       900: '#0C0911',
     },
+    green: '#19F785',
+    red: {
+      100: '#FF505E',
+      300: '#D32E3C',
+    },
+    orange: '#F7AB19',
   },
   fonts: {
     heading: `'Poppins', sans-serif`,
