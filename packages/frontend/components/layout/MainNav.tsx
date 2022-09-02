@@ -62,7 +62,15 @@ const SocialIconLink = ({ href, icon }) => (
  */
 function MainNav(): JSX.Element {
   return (
-    <Flex h="100%" direction="column" alignItems="center" paddingTop="40px">
+    <Flex
+      h="100%"
+      direction="column"
+      alignItems="center"
+      paddingTop="40px"
+      borderRight="1px solid"
+      borderColor="gray.500"
+      background="purple.700"
+    >
       <Box marginTop="3px">
         <GravityLogo />
       </Box>

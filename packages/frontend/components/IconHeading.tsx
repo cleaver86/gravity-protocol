@@ -4,7 +4,8 @@ import FaIcon from './FaIcon'
 /**
  * Component
  */
-function IconHeading({ children, icon }): JSX.Element {
+function IconHeading({ children, icon, isFontAwesome }): JSX.Element {
+  console.log(icon)
   return (
     <Heading
       display="flex"
@@ -14,10 +15,14 @@ function IconHeading({ children, icon }): JSX.Element {
       as="h1"
       mb="8"
     >
-      <FaIcon height="23px" icon={icon} />
+      {isFontAwesome ? <FaIcon height="23px" icon={icon} /> : icon}
       <Box marginLeft="20px">{children}</Box>
     </Heading>
   )
+}
+
+IconHeading.defaultProps = {
+  isFontAwesome: true,
 }
 
 export default IconHeading

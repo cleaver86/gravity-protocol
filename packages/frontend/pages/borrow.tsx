@@ -9,7 +9,7 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react'
 import IconHeading from '../components/IconHeading'
-import Vessel from '../components/Vessel'
+import VesselCard from '../components/VesselCard'
 import Label from '../components/Label'
 import MonetaryText from '../components/MonetaryText'
 import { faArrowRightArrowLeft } from '@fortawesome/pro-regular-svg-icons'
@@ -69,7 +69,7 @@ function Borrow(): JSX.Element {
       <Box padding="80px 0">
         <Wrap spacing="10" wrap="wrap">
           <WrapItem>
-            <Vessel
+            <VesselCard
               name="ETH"
               icon={<EthTokenIcon />}
               available={216000.0}
@@ -81,7 +81,7 @@ function Borrow(): JSX.Element {
             />
           </WrapItem>
           <WrapItem>
-            <Vessel
+            <VesselCard
               name="rETH"
               icon={<RethTokenIcon />}
               available={0.0}
@@ -91,7 +91,7 @@ function Borrow(): JSX.Element {
             />
           </WrapItem>
           <WrapItem>
-            <Vessel
+            <VesselCard
               name="stETH"
               icon={<StethTokenIcon />}
               available={0.0}

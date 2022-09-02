@@ -22,6 +22,16 @@ interface LayoutProps {
   customMeta?: MetaProps
 }
 
+const Gradiant = () => (
+  <Box
+    w="100%"
+    h="175px"
+    position="absolute"
+    zIndex={0}
+    bgGradient="linear(purple.600, purple.700)"
+  />
+)
+
 /**
  * Component
  */
@@ -34,28 +44,19 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
     <>
       <Head customMeta={customMeta} />
       <Flex h="calc(100vh)" justify="space-between">
+        <Gradiant />
         {account ? (
           <>
-            <Box
-              w="250px"
-              h="100%"
-              borderRight="1px solid"
-              borderColor={'gray.500'}
-            >
+            <Box w="250px" h="100%" position="relative" zIndex={50}>
               <MainNav />
             </Box>
-            <Box w="1100px" h="100%">
+            <Box w="1100px" h="100%" position="relative" zIndex={50}>
               <Container h="100%" paddingTop="40px" maxWidth="container.xl">
                 {children}
                 <Notifications notifications={notifications} />
               </Container>
             </Box>
-            <Box
-              w="300px"
-              h="100%"
-              borderLeft="1px solid"
-              borderColor={'gray.500'}
-            >
+            <Box w="300px" h="100%" position="relative" zIndex={50}>
               <Wallet name={wallet} account={account} deactivate={deactivate} />
             </Box>
           </>
