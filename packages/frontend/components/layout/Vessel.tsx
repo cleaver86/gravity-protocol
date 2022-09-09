@@ -1,16 +1,11 @@
-import { Box, Flex, HStack } from '@chakra-ui/react'
+import { Box, Flex, HStack, SimpleGrid, Text } from '@chakra-ui/react'
 import IconHeading from '../IconHeading'
 import Label from '../Label'
 import MonetaryText from '../MonetaryText'
+import RatioChart from '../RatioChart'
+import RatioCard from '../RatioCard'
+import LoanValueChart from '../LoanValueChart'
 
-const RatioCard = ({ children, currency, label }) => (
-  <Box w="100%" padding="20px" background="purple.500" borderRadius="5px">
-    <Label>{label}</Label>
-    <MonetaryText currency={currency} fontSize="2xl">
-      {children}
-    </MonetaryText>
-  </Box>
-)
 /**
  * Component
  */
@@ -22,21 +17,67 @@ function Vessel({ name, icon }): JSX.Element {
           {`${name} Vessel`}
         </IconHeading>
       </Box>
-      <Label>Available to Borrow</Label>
-      <MonetaryText currency="VUSD" fontSize="4xl">
-        {216000.0}
-      </MonetaryText>
-      <HStack marginTop="60px" spacing="3">
-        <RatioCard currency="ETH" label={`Wallet (${name})`}>
-          {240000.0}
-        </RatioCard>
-        <RatioCard currency="ETH" label={`Collateral (${name})`}>
-          {0.0}
-        </RatioCard>
-        <RatioCard currency="VUSD" label="Debt">
-          {0.0}
-        </RatioCard>
-      </HStack>
+      <SimpleGrid templateColumns="2fr 1fr" spacing={10}>
+        <Box>
+          <Box marginBottom="60px">
+            <Label>Available to Borrow</Label>
+            <MonetaryText currency="VUSD" fontSize="4xl">
+              {216000.0}
+            </MonetaryText>
+          </Box>
+          <Box marginBottom="10px">
+            <RatioChart />
+          </Box>
+          <HStack spacing="3">
+            <RatioCard
+              currency="ETH"
+              label={`Wallet (${name})`}
+              color="purple.100"
+            >
+              {240000.0}
+            </RatioCard>
+            <RatioCard
+              currency="ETH"
+              label={`Collateral (${name})`}
+              color="green"
+            >
+              {0.0}
+            </RatioCard>
+            <RatioCard currency="VUSD" label="Debt" color="orange">
+              {0.0}
+            </RatioCard>
+          </HStack>
+        </Box>
+        <Box>
+          <Label align="center" info>
+            Vessel LTV
+          </Label>
+          <Text
+            fontSize="4xl"
+            fontWeight="medium"
+            textAlign="center"
+            color="green"
+          >
+            10.00%
+          </Text>
+          <Flex marginTop="-70px">
+            <LoanValueChart />
+          </Flex>
+          <Box marginTop="-162px">
+            <Label align="center" info>
+              System LTV
+            </Label>
+            <Text
+              fontSize="2xl"
+              fontWeight="medium"
+              textAlign="center"
+              color="green"
+            >
+              20.00%
+            </Text>
+          </Box>
+        </Box>
+      </SimpleGrid>
     </>
   )
 }

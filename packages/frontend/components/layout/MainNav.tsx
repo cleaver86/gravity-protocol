@@ -18,7 +18,14 @@ import GravityLogo from '../../public/images/logo-gravity.svg'
 
 const NavItem = ({ text, icon, route }) => {
   const router = useRouter()
-  const active = route === router.pathname
+  let active
+
+  if (route === '/') {
+    active = router.pathname === route
+  } else {
+    active = router.pathname.includes(route)
+  }
+
   const color = active ? 'purple.100' : 'gray.100'
   const hoverColor = active ? 'purple.100' : 'white'
 
