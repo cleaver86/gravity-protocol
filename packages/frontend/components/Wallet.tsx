@@ -139,7 +139,7 @@ function Wallet({ name, account, deactivate }): JSX.Element {
       justifyContent="space-between"
       borderLeft="1px solid"
       borderColor="gray.500"
-      background="purple.700"
+      background="purple.800"
     >
       <Flex direction={'column'} padding="40px 20px 20px 20px">
         <Flex alignItems={'center'} marginBottom={'40px'}>
@@ -156,8 +156,8 @@ function Wallet({ name, account, deactivate }): JSX.Element {
               paddingRight="15px"
               fontSize="sm"
               fontWeight="medium"
-              _hover={{ background: 'purple.400', borderColor: 'purple.400' }}
-              _active={{ background: 'purple.400' }}
+              _hover={{ background: 'purple.500', borderColor: 'purple.500' }}
+              _active={{ background: 'purple.500' }}
             >
               <Flex alignItems={'center'}>
                 <WalletIcon name={name} />
@@ -167,10 +167,10 @@ function Wallet({ name, account, deactivate }): JSX.Element {
                 </Box>
               </Flex>
             </MenuButton>
-            <MenuList bg="purple.400" border="none">
+            <MenuList bg="purple.500" border="none">
               <MenuItem
                 onClick={deactivate}
-                _hover={{ background: 'purple.300' }}
+                _hover={{ background: 'purple.400' }}
               >
                 Disconnect
               </MenuItem>

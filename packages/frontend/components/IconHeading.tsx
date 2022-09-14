@@ -5,7 +5,6 @@ import FaIcon from './FaIcon'
  * Component
  */
 function IconHeading({ children, icon, isFontAwesome }): JSX.Element {
-  console.log(icon)
   return (
     <Heading
       display="flex"

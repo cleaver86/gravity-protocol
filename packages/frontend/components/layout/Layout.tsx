@@ -28,7 +28,7 @@ const Gradiant = () => (
     h="175px"
     position="absolute"
     zIndex={0}
-    bgGradient="linear(purple.600, purple.700)"
+    bgGradient="linear(purple.700, purple.800)"
   />
 )
 

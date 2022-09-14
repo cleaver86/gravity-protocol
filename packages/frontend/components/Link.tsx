@@ -7,7 +7,7 @@ function Link({ children, href }): JSX.Element {
   return (
     <ChakraLink
       href={href}
-      color="purple.100"
+      color="purple.300"
       fontSize="sm"
       fontWeight="medium"
       marginLeft="5px"

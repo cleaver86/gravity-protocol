@@ -30,7 +30,7 @@ const Vessel = ({
   return (
     <NextLink href={`borrow/${name.toLowerCase()}`}>
       <Box
-        backgroundColor="purple.600"
+        backgroundColor="purple.700"
         border="1px solid"
         borderColor="gray.500"
         borderRadius="5px"
@@ -116,7 +116,7 @@ const Vessel = ({
         </Box>
         <Box
           padding="20px 30px"
-          backgroundColor="purple.700"
+          backgroundColor="purple.800"
           borderTop="1px solid"
           borderColor="gray.500"
           borderBottomRadius="5px"

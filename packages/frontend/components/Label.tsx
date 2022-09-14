@@ -16,7 +16,7 @@ const Label = ({ children, info, orientation, align }) => {
         </Box>
       )}
       <Text
-        fontSize="14px"
+        fontSize="sm"
         textTransform="uppercase"
         fontWeight="semibold"
         color="gray.300"

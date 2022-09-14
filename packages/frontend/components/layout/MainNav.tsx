@@ -26,8 +26,8 @@ const NavItem = ({ text, icon, route }) => {
     active = router.pathname.includes(route)
   }
 
-  const color = active ? 'purple.100' : 'gray.100'
-  const hoverColor = active ? 'purple.100' : 'white'
+  const color = active ? 'purple.300' : 'gray.100'
+  const hoverColor = active ? 'purple.300' : 'white'
 
   return (
     <Flex role="group">
@@ -76,7 +76,7 @@ function MainNav(): JSX.Element {
       paddingTop="40px"
       borderRight="1px solid"
       borderColor="gray.500"
-      background="purple.700"
+      background="purple.800"
     >
       <Box marginTop="3px">
         <GravityLogo />
