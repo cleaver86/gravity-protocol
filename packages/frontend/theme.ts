@@ -20,7 +20,7 @@ const themeProps = {
       600: '#352451',
       700: '#2D2041',
       800: '#251D32',
-      900: '#0C0911',
+      900: '#130E1C',
     },
     green: '#19F785',
     red: {
@@ -51,9 +51,12 @@ const themeProps = {
         bg: 'purple.800',
       },
     },
-  }
-} 
+  },
+}
 
-const theme = extendTheme(themeProps, withDefaultColorScheme({ colorScheme: 'purple' }))
+const theme = extendTheme(
+  themeProps,
+  withDefaultColorScheme({ colorScheme: 'purple' })
+)
 
 export default theme

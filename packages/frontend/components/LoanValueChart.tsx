@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react'
 import { Chart, ArcElement } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 
@@ -8,32 +9,38 @@ Chart.register(ArcElement)
  */
 function LoanValueChart(): JSX.Element {
   return (
-    <Doughnut
-      data={{
-        datasets: [
-          {
-            data: [10, 85],
-            backgroundColor: ['#19F785', '#726C89'],
-            borderRadius: 100,
-            borderWidth: 0,
-          },
-          {
-            weight: 0.3,
-          },
-          {
-            data: [20, 80],
-            backgroundColor: ['#19F785', '#726C89'],
-            borderRadius: 100,
-            borderWidth: 0,
-          },
-        ],
-      }}
-      options={{
-        rotation: -90,
-        circumference: 180,
-        cutout: 110,
-      }}
-    />
+    <Box transform="rotateY(180deg);">
+      <Doughnut
+        data={{
+          datasets: [
+            {
+              data: [10, 80, 10].reverse(),
+              backgroundColor: ['#19F785', '#726C89', '#342D43'].reverse(),
+              borderRadius: 100,
+              borderWidth: 0,
+              spacing: -60,
+              rotation: -95,
+              circumference: 190,
+            },
+            {
+              weight: 0.3,
+            },
+            {
+              data: [20, 60, 20].reverse(),
+              backgroundColor: ['#19F785', '#726C89', '#342D43'].reverse(),
+              borderRadius: 100,
+              borderWidth: 0,
+              spacing: -60,
+              circumference: 187,
+              rotation: -93,
+            },
+          ],
+        }}
+        options={{
+          cutout: 115,
+        }}
+      />
+    </Box>
   )
 }
 

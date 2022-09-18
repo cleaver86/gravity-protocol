@@ -8,9 +8,16 @@ import MonetaryText from './MonetaryText'
 function RatioCard({ children, currency, label, color }): JSX.Element {
   return (
     <Box w="100%" background="purple.600" borderRadius="5px">
-      <Box padding="20px 20px 15px 20px">
-        <Label align="flex-end">{label}</Label>
-        <MonetaryText currency={currency} fontSize="2xl" align="flex-end">
+      <Box padding="10px 10px 10px 10px">
+        <Label align="right" marginBottom="5px">
+          {label}
+        </Label>
+        <MonetaryText
+          currency={currency}
+          fontSize="lg"
+          align="flex-end"
+          showCurrency={false}
+        >
           {children}
         </MonetaryText>
       </Box>

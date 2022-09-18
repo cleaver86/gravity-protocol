@@ -13,9 +13,9 @@ import Input from './Input'
 const CustomInput = ({ currency, label, available, ...rest }) => {
   return (
     <>
-      <Flex justifyContent="right" marginBottom="10px">
+      <Flex justifyContent="right">
         <Box marginRight="auto">
-          <Label>{label}</Label>
+          <Label marginBottom="20px">{label}</Label>
         </Box>
         <Box marginTop="-10px">
           <Button fontWeight="medium" variant="ghost">
@@ -31,11 +31,9 @@ const CustomInput = ({ currency, label, available, ...rest }) => {
       </Flex>
       <InputGroup position="relative" zIndex="0">
         <Input {...rest} />
-        <InputRightElement
-          margin="5px 20px"
-          fontWeight="medium"
-          children={<Text>{currency}</Text>}
-        />
+        <InputRightElement margin="5px 20px" fontWeight="medium">
+          <Text>{currency}</Text>
+        </InputRightElement>
       </InputGroup>
       <Flex
         position="absolute"

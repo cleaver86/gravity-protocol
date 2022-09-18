@@ -88,7 +88,7 @@ export const data = {
  * Component
  */
 function RatioChart(): JSX.Element {
-  return <Bar height="9px" data={data} options={options} />
+  return <Bar height="12px" data={data} options={options} />
 }
 
 export default RatioChart
