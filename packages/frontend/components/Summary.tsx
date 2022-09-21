@@ -1,6 +1,11 @@
-import { Box, Divider, SimpleGrid } from '@chakra-ui/react'
+import { Box, Button, Divider, SimpleGrid } from '@chakra-ui/react'
 import Label from './Label'
 import MonetaryText from './MonetaryText'
+import {
+  getLoanToValueFromBorrow,
+  getDebtFromBorrow,
+  getLiquidationPriceFromBorrow,
+} from '../utils/totals'
 
 const SummaryLabel = ({ children, muted }) => (
   <Label
@@ -30,11 +35,20 @@ const SummaryText = ({ children, currency, muted }) => (
 /**
  * Component
  */
-function Summary(): JSX.Element {
+function Summary({
+  received,
+  collateralUnits,
+  collateralPrice,
+  maxLoanToValue,
+  onBorrow,
+}) {
+  const collateralValue = collateralUnits * collateralPrice
+  const loanToValue = getLoanToValueFromBorrow(received, collateralValue)
+
   return (
     <Box
       w="100%"
-      padding="20px 30px"
+      padding="20px 30px 40px 30px"
       background="purple.900"
       borderRadius="10px"
     >
@@ -48,16 +62,18 @@ function Summary(): JSX.Element {
           <SummaryLabel>Estimated Total Debt</SummaryLabel>
         </Box>
         <Box>
-          <SummaryText>{10.0}</SummaryText>
-          <SummaryText currency="USD">{11100.0}</SummaryText>
-          <SummaryText currency="VUSD">{11100.0}</SummaryText>
+          <SummaryText>{loanToValue * 100}</SummaryText>
+          <SummaryText currency="USD">{collateralValue}</SummaryText>
+          <SummaryText currency="VUSD">{received}</SummaryText>
           <SummaryText currency="VUSD">{200}</SummaryText>
           <SummaryText>{0.5}</SummaryText>
-          <SummaryText currency="VUSD">{11355.5}</SummaryText>
+          <SummaryText currency="VUSD">
+            {getDebtFromBorrow(received, 0.005)}
+          </SummaryText>
         </Box>
       </SimpleGrid>
       <Divider marginBottom="20px" />
-      <SimpleGrid templateColumns="2fr 1fr" spacing={10}>
+      <SimpleGrid templateColumns="2fr 1fr" spacing={10} marginBottom="20px">
         <Box>
           <SummaryLabel muted>ETH Price</SummaryLabel>
           <SummaryLabel muted>Liquidation Price</SummaryLabel>
@@ -65,14 +81,21 @@ function Summary(): JSX.Element {
         </Box>
         <Box>
           <SummaryText currency="USD" muted>
-            {1500.0}
+            {collateralPrice}
           </SummaryText>
           <SummaryText currency="USD" muted>
-            {167.5}
+            {getLiquidationPriceFromBorrow(
+              received,
+              collateralUnits,
+              loanToValue
+            )}
           </SummaryText>
-          <SummaryText muted>{90.0}</SummaryText>
+          <SummaryText muted>{maxLoanToValue}</SummaryText>
         </Box>
       </SimpleGrid>
+      <Button w="100%" size="lg" borderRadius="40px" onClick={onBorrow}>
+        Borrow
+      </Button>
     </Box>
   )
 }

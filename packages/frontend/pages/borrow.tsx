@@ -16,6 +16,7 @@ import { faArrowRightArrowLeft } from '@fortawesome/pro-regular-svg-icons'
 import EthTokenIcon from '../public/images/token-eth.svg'
 import RethTokenIcon from '../public/images/token-reth.svg'
 import StethTokenIcon from '../public/images/token-steth.svg'
+import { CURRENCY_ETH, CURRENCY_RETH, CURRENCY_STETH } from '../hooks/useWallet'
 
 const Header = ({ available, debt, minted, mintCap }) => (
   <Box>
@@ -70,7 +71,7 @@ function Borrow(): JSX.Element {
         <Wrap spacing="10" wrap="wrap">
           <WrapItem>
             <VesselCard
-              name="ETH"
+              name={CURRENCY_ETH}
               icon={<EthTokenIcon />}
               available={216000.0}
               debt={10000.0}
@@ -82,7 +83,7 @@ function Borrow(): JSX.Element {
           </WrapItem>
           <WrapItem>
             <VesselCard
-              name="rETH"
+              name={CURRENCY_RETH}
               icon={<RethTokenIcon />}
               available={0.0}
               systemLtv={15.0}
@@ -92,7 +93,7 @@ function Borrow(): JSX.Element {
           </WrapItem>
           <WrapItem>
             <VesselCard
-              name="stETH"
+              name={CURRENCY_STETH}
               icon={<StethTokenIcon />}
               available={0.0}
               systemLtv={100.0}

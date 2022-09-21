@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import {
   SimpleGrid,
   Tab,
@@ -6,16 +7,24 @@ import {
   TabPanel,
   TabPanels,
 } from '@chakra-ui/react'
+import { WalletContext } from '../../providers/WalletProvider'
 import VesselHeader from '../layout/VesselHeader'
 import VesselBorrow from '../layout/VesselBorrow'
 
 /**
  * Component
  */
-function Vessel({ name, icon }): JSX.Element {
+function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
+  const { loading, balances, prices } = useContext(WalletContext)
+
   return (
     <>
-      <VesselHeader name={name} icon={icon} />
+      <VesselHeader
+        name={name}
+        // icon={icon}
+        balance={balances[name]}
+        price={prices[name]}
+      />
       <Tabs colorScheme="purple">
         <TabList
           borderBottomWidth="1px"
@@ -36,7 +45,12 @@ function Vessel({ name, icon }): JSX.Element {
               spacing={10}
               marginBottom="90px"
             >
-              <VesselBorrow />
+              <VesselBorrow
+                name={name}
+                balance={balances[name]}
+                price={prices[name]}
+                maxLoanToValue={maxLoanToValue}
+              />
             </SimpleGrid>
           </TabPanel>
           <TabPanel>

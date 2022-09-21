@@ -45,7 +45,7 @@ const Vessel = ({
           <Flex alignItems="flex-end" marginBottom="40px">
             {icon}
             <Heading fontSize="2xl" fontWeight="medium" marginLeft="10px">
-              {name} Vessel
+              {name.toUpperCase()} Vessel
             </Heading>
 
             <Spacer />

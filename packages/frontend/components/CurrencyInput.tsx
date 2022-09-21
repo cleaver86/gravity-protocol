@@ -10,24 +10,50 @@ import { NumericFormat } from 'react-number-format'
 import Label from './Label'
 import Input from './Input'
 
-const CustomInput = ({ currency, label, available, ...rest }) => {
+const CustomInput = ({
+  currency,
+  label,
+  available,
+  onClickPercentage,
+  ...rest
+}) => {
   return (
     <>
       <Flex justifyContent="right">
         <Box marginRight="auto">
           <Label marginBottom="20px">{label}</Label>
         </Box>
-        <Box marginTop="-10px">
-          <Button fontWeight="medium" variant="ghost">
-            10%
-          </Button>
-          <Button fontWeight="medium" variant="ghost">
-            50%
-          </Button>
-          <Button fontWeight="medium" variant="ghost">
-            Max
-          </Button>
-        </Box>
+        {onClickPercentage && (
+          <Box marginTop="-10px">
+            <Button
+              fontWeight="medium"
+              variant="ghost"
+              onClick={() => {
+                onClickPercentage(0.1)
+              }}
+            >
+              10%
+            </Button>
+            <Button
+              fontWeight="medium"
+              variant="ghost"
+              onClick={() => {
+                onClickPercentage(0.5)
+              }}
+            >
+              50%
+            </Button>
+            <Button
+              fontWeight="medium"
+              variant="ghost"
+              onClick={() => {
+                onClickPercentage(1)
+              }}
+            >
+              Max
+            </Button>
+          </Box>
+        )}
       </Flex>
       <InputGroup position="relative" zIndex="0">
         <Input {...rest} />

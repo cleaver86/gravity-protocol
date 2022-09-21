@@ -68,6 +68,7 @@ export async function getEthUsdPrice() {
   )
   // We get the data from the last round of the contract
   const roundData = await priceFeed.latestRoundData()
+
   // Determine how many decimals the price feed has (10**decimals)
   const decimals = await priceFeed.decimals()
 

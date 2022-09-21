@@ -8,7 +8,6 @@ import { ApolloProvider } from '@apollo/client'
 import { ChakraProvider } from '@chakra-ui/react'
 import { Mainnet, DAppProvider, Config } from '@usedapp/core'
 import type { AppProps } from 'next/app'
-import React from 'react'
 // import { MulticallContract } from '../artifacts/contracts/contractAddress'
 import { useApollo } from '../lib/apolloClient'
 import Layout from '../components/layout/Layout'
@@ -20,6 +19,11 @@ const config: Config = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
     [Mainnet.chainId]: 'https://rpc.ankr.com/eth',
+  },
+  pollingInterval: 10000,
+  notifications: {
+    expirationPeriod: 1000,
+    checkInterval: 1000,
   },
 }
 // const config: Config = {
@@ -48,6 +52,7 @@ const config: Config = {
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   const apolloClient = useApollo(pageProps)
+
   return (
     <ApolloProvider client={apolloClient}>
       <DAppProvider config={config}>

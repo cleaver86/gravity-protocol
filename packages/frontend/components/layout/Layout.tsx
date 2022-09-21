@@ -6,6 +6,7 @@ import ConnectWallet from '../ConnectWallet'
 import Wallet from '../Wallet'
 import MainNav from './MainNav'
 import Head, { MetaProps } from './Head'
+import { WalletProvider } from '../../providers/WalletProvider'
 
 // Extends `window` to add `ethereum`.
 declare global {
@@ -46,7 +47,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
       <Flex h="calc(100vh)" justify="space-between">
         <Gradiant />
         {account ? (
-          <>
+          <WalletProvider account={account}>
             <Box w="250px" h="100%" position="relative" zIndex={50}>
               <MainNav />
             </Box>
@@ -59,7 +60,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
             <Box w="300px" h="100%" position="relative" zIndex={50}>
               <Wallet name={wallet} account={account} deactivate={deactivate} />
             </Box>
-          </>
+          </WalletProvider>
         ) : (
           <Box width="100%" padding="0 600px 0 600px">
             <ConnectWallet

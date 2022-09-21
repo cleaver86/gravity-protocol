@@ -1,4 +1,6 @@
+import { memo } from 'react'
 import { Box, Flex, HStack, SimpleGrid, Text } from '@chakra-ui/react'
+import currency from 'currency.js'
 import IconHeading from '../IconHeading'
 import Label from '../Label'
 import MonetaryText from '../MonetaryText'
@@ -10,12 +12,14 @@ import Status from '../Status'
 /**
  * Component
  */
-function VesselHeader({ name, icon }): JSX.Element {
+function VesselHeader({ name, icon, balance, price }): JSX.Element {
+  const walletBalanceUsd = balance * price
+
   return (
     <>
       <Box marginBottom="100px">
         <IconHeading icon={icon} isFontAwesome={false}>
-          {`${name} Vessel`}
+          {`${name.toUpperCase()} Vessel`}
         </IconHeading>
       </Box>
       <SimpleGrid templateColumns="1fr 1fr" spacing={20} marginBottom="90px">
@@ -31,7 +35,7 @@ function VesselHeader({ name, icon }): JSX.Element {
           </Box>
           <HStack spacing="3">
             <RatioCard currency="USD" label={`Wallet (ETH)`} color="purple.300">
-              {111000.0}
+              {currency(walletBalanceUsd).format()}
             </RatioCard>
             <RatioCard currency="USD" label={`Collateral (ETH)`} color="green">
               {111000.0}
@@ -62,25 +66,27 @@ function VesselHeader({ name, icon }): JSX.Element {
           </Box>
           <Box marginLeft="auto">
             <Label align="center" marginBottom="5px" info>
-              Vessel LTV
+              Loan-to-Value
             </Label>
-            <Text
-              fontSize="2xl"
-              fontWeight="medium"
-              textAlign="center"
-              color="green"
-            >
-              10.00%
-            </Text>
-            <Box marginTop="10px" maxHeight="180">
+            <Flex alignItems="baseline" justifyContent="center">
+              <Text>System</Text>
+              <Text
+                fontSize="lg"
+                fontWeight="medium"
+                textAlign="center"
+                color="green"
+                marginLeft="10px"
+              >
+                35.00%
+              </Text>
+            </Flex>
+            <Box marginTop="25px" maxHeight="180">
               <LoanValueChart />
             </Box>
-            <Box marginTop="-75px">
-              <Label align="center" marginBottom="5px" info>
-                System LTV
-              </Label>
+            <Box marginTop="-100px" textAlign="center">
+              <Text>Personal</Text>
               <Text
-                fontSize="2xl"
+                fontSize="3xl"
                 fontWeight="medium"
                 textAlign="center"
                 color="green"
@@ -95,4 +101,4 @@ function VesselHeader({ name, icon }): JSX.Element {
   )
 }
 
-export default VesselHeader
+export default memo(VesselHeader)

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext } from 'react'
 import {
   chakra,
   Box,
@@ -13,14 +13,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useEtherBalance, useTokenBalance, shortenAddress } from '@usedapp/core'
-import { utils } from 'ethers'
-import {
-  getEthUsdPrice,
-  getStethEthPrice,
-  getRethUsdPrice,
-} from '../utils/getPrices'
-import useInterval from '../hooks/useInterval'
+import { shortenAddress } from '@usedapp/core'
+import { WalletContext } from '../providers/WalletProvider'
 import currency from 'currency.js'
 import Link from './Link'
 import GrvtTokenIcon from '../public/images/token-grvt.svg'
@@ -31,9 +25,6 @@ import StethTokenIcon from '../public/images/token-steth.svg'
 import WalletIcon from './WalletIcon'
 import FaIcon from './FaIcon'
 import { faAngleDown } from '@fortawesome/pro-solid-svg-icons'
-
-const TOKEN_ADDRESS_RETH = '0xae78736cd615f374d3085123a210448e74fc6393'
-const TOKEN_ADDRESS_STETH = '0xae7ab96520de3a18e5e111b5eaab095312d7fe84'
 
 const Label = chakra(Text, {
   baseStyle: {
@@ -89,48 +80,7 @@ const Token = ({ label, icon, balance, usd }) => {
  * Component
  */
 function Wallet({ name, account, deactivate }): JSX.Element {
-  const [ethUsdPrice, setEthUsdPrice] = useState(0)
-  const [stethUsdPrice, setStethUsdPrice] = useState(0)
-  const [rethUsdPrice, setRethUsdPrice] = useState(0)
-  const [total, setTotal] = useState(0)
-  const etherBalance = useEtherBalance(account)
-  const rethBalance = useTokenBalance(TOKEN_ADDRESS_RETH, account)
-  const stethBalance = useTokenBalance(TOKEN_ADDRESS_STETH, account)
-  const formattedGrtvBalance = '0.0'
-  const formattedVusdBalance = '0.0'
-  const formattedEtherBalance = etherBalance
-    ? utils.formatEther(etherBalance).slice(0, 8)
-    : '0'
-  const formattedRethBalance = rethBalance
-    ? utils.formatEther(rethBalance).slice(0, 8)
-    : '0'
-  const formattedStethBalance = stethBalance
-    ? utils.formatEther(stethBalance).slice(0, 8)
-    : '0'
-
-  const setPricesAndTotal = async () => {
-    const ethUsdPrice = await getEthUsdPrice()
-    const rethUsdPrice = await getRethUsdPrice()
-    const stethEthPrice = await getStethEthPrice()
-    const stethUsdPrice = currency(ethUsdPrice * stethEthPrice).value
-
-    setEthUsdPrice(ethUsdPrice)
-    setRethUsdPrice(rethUsdPrice)
-    setStethUsdPrice(stethUsdPrice)
-    setTotal(
-      formattedEtherBalance * ethUsdPrice +
-        formattedRethBalance * rethUsdPrice +
-        formattedStethBalance * stethUsdPrice
-    )
-  }
-
-  useInterval(() => {
-    setPricesAndTotal()
-  }, 10000)
-
-  useEffect(() => {
-    setPricesAndTotal()
-  }, [formattedEtherBalance, formattedRethBalance, formattedStethBalance])
+  const { loading, balances, prices, total } = useContext(WalletContext)
 
   return (
     <Flex
@@ -181,35 +131,25 @@ function Wallet({ name, account, deactivate }): JSX.Element {
           divider={<StackDivider borderColor="gray.500" />}
           align="stretch"
         >
-          <Token
-            label="GRVT"
-            icon={<GrvtTokenIcon />}
-            balance={formattedGrtvBalance}
-            usd={1.0}
-          />
-          <Token
-            label="VUSD"
-            icon={<VusdTokenIcon />}
-            balance={formattedVusdBalance}
-            usd={1.0}
-          />
+          <Token label="GRVT" icon={<GrvtTokenIcon />} balance={0} usd={35.0} />
+          <Token label="VUSD" icon={<VusdTokenIcon />} balance={0} usd={1.0} />
           <Token
             label="ETH"
             icon={<EthTokenIcon />}
-            balance={formattedEtherBalance}
-            usd={ethUsdPrice}
+            balance={balances['eth']}
+            usd={prices['eth']}
           />
           <Token
             label="rETH"
             icon={<RethTokenIcon />}
-            balance={formattedRethBalance}
-            usd={rethUsdPrice}
+            balance={balances['reth']}
+            usd={prices['reth']}
           />
           <Token
             label="stETH"
             icon={<StethTokenIcon />}
-            balance={formattedStethBalance}
-            usd={stethUsdPrice}
+            balance={balances['steth']}
+            usd={prices['steth']}
           />
         </VStack>
       </Flex>

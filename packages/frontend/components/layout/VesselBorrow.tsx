@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import {
   Box,
@@ -17,7 +17,8 @@ import { getFormattedCurrency } from '../../utils/currency'
 /**
  * Component
  */
-function VesselBorrow(): JSX.Element {
+function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
+  const [availableCollateral, setAvailableCollateral] = useState(balance)
   const [maxBorrowAmount, setMaxBorrowAmount] = useState(0)
   const [borrowMode, setBorrowMode] = useState('normal')
   const [leverage, setLeverage] = useState(0.0)
@@ -28,21 +29,24 @@ function VesselBorrow(): JSX.Element {
       borrow: '',
     },
   })
-  const watchCollateral = watch('collateral', 0)
-  const WALLET_ETH = 100000.55
+  const depositedCollateral = watch('collateral', 0)
+  const borrow = watch('borrow', 0)
 
   function onSubmit() {
     //console.log(values)
   }
 
   useEffect(() => {
-    if (watchCollateral == null || watchCollateral <= 0) {
-      setValue('borrow', '')
+    if (depositedCollateral == null || depositedCollateral <= 0) {
+      setAvailableCollateral(balance)
       setMaxBorrowAmount(0)
     } else {
-      setMaxBorrowAmount(watchCollateral * 0.9)
+      setAvailableCollateral(balance - depositedCollateral)
+      setMaxBorrowAmount(depositedCollateral * price * maxLoanToValue)
     }
-  }, [watchCollateral])
+
+    setValue('borrow', '')
+  }, [depositedCollateral, balance, price, name, setValue])
 
   return (
     <>
@@ -56,14 +60,17 @@ function VesselBorrow(): JSX.Element {
                 currency="ETH"
                 label="Deposit Collateral"
                 decimals={6}
-                available={getFormattedCurrency(WALLET_ETH, 6)}
+                available={getFormattedCurrency(availableCollateral, 6)}
                 isAllowed={(values) => {
                   const { value } = values
 
-                  return value <= WALLET_ETH
+                  return value <= balance
                 }}
                 onValueChange={(values) => {
                   onChange(values.floatValue)
+                }}
+                onClickPercentage={(percentage) => {
+                  onChange(balance * percentage)
                 }}
                 {...rest}
               />
@@ -104,23 +111,29 @@ function VesselBorrow(): JSX.Element {
             <LeverageSlider onChange={(val) => setLeverage(parseFloat(val))} />
           )}
         </Box>
-        {watchCollateral > 0 && (
+        {depositedCollateral > 0 && (
           <Controller
             control={control}
             name="borrow"
-            render={({ field }) => (
+            render={({ field: { onChange, ...rest } }) => (
               <FormControl marginBottom="40px">
                 <CurrencyInput
                   currency="VUSD"
                   label="Borrow Amount"
                   decimals={2}
-                  available={getFormattedCurrency(maxBorrowAmount, 2)}
+                  available={getFormattedCurrency(maxBorrowAmount - borrow, 2)}
                   isAllowed={(values) => {
                     const { value } = values
 
-                    return value <= maxBorrowAmount
+                    return value <= maxBorrowAmount - borrow
                   }}
-                  {...field}
+                  onValueChange={(values) => {
+                    onChange(values.floatValue)
+                  }}
+                  onClickPercentage={(percentage) => {
+                    onChange(maxBorrowAmount * percentage)
+                  }}
+                  {...rest}
                 />
               </FormControl>
             )}
@@ -129,10 +142,17 @@ function VesselBorrow(): JSX.Element {
         <Button type="submit">Borrow</Button>
       </form>
       <Box>
-        <Summary />
+        {/* {borrow > 0 && ( */}
+        <Summary
+          received={borrow}
+          collateralPrice={price}
+          collateralUnits={depositedCollateral}
+          maxLoanToValue={maxLoanToValue}
+        />
+        {/* )} */}
       </Box>
     </>
   )
 }
 
-export default VesselBorrow
+export default memo(VesselBorrow)

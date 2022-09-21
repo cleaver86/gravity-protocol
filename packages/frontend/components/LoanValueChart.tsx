@@ -1,43 +1,52 @@
+import { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { Chart, ArcElement } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
+import { faLacrosseStick } from '@fortawesome/pro-regular-svg-icons'
 
 Chart.register(ArcElement)
 
 /**
  * Component
  */
+
 function LoanValueChart(): JSX.Element {
+  const [animate, setAnimate] = useState(true)
+
+  useEffect(() => {
+    setAnimate(false)
+  }, [])
+
   return (
     <Box transform="rotateY(180deg);">
       <Doughnut
+        options={animate === false && { animation: { duration: 0 } }}
         data={{
           datasets: [
             {
-              data: [10, 80, 10].reverse(),
-              backgroundColor: ['#19F785', '#726C89', '#342D43'].reverse(),
+              data: [55, 30, 10].reverse(),
+              backgroundColor: ['#19F785', '#F7AB19', '#FF505E'].reverse(),
+              borderColor: ['#19F785', '#F7AB19', '#FF505E'].reverse(),
               borderRadius: 100,
-              borderWidth: 0,
-              spacing: -60,
-              rotation: -95,
-              circumference: 190,
+              borderWidth: 4,
+              spacing: 0,
+              rotation: -90,
+              circumference: 180,
+              cutout: 140,
             },
+            { weight: 0.3 },
             {
-              weight: 0.3,
-            },
-            {
-              data: [20, 60, 20].reverse(),
-              backgroundColor: ['#19F785', '#726C89', '#342D43'].reverse(),
+              data: [20, 80].reverse(),
+              backgroundColor: ['#19F785', '#412C64'].reverse(),
+              borderColor: ['#19F785', '#412C64'].reverse(),
               borderRadius: 100,
-              borderWidth: 0,
-              spacing: -60,
-              circumference: 187,
-              rotation: -93,
+              borderWidth: 15,
+              spacing: 0,
+              rotation: -90,
+              circumference: 180,
+              cutout: 115,
             },
           ],
-        }}
-        options={{
-          cutout: 115,
         }}
       />
     </Box>
