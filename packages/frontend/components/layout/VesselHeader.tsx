@@ -7,7 +7,6 @@ import {
   Text,
   useMediaQuery,
 } from '@chakra-ui/react'
-import currency from 'currency.js'
 import Label from '../Label'
 import MonetaryText from '../MonetaryText'
 import RatioChart from '../RatioChart'
@@ -126,10 +125,10 @@ const LoanToValueInfoMobile = () => (
 /**
  * Component
  */
-function VesselHeader({ balance, price }): JSX.Element {
+function VesselHeader(): JSX.Element {
   const [isMobileRes] = useMediaQuery('(max-width: 767px)')
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
-  const walletBalanceUsd = balance * price
+  // const walletBalanceUsd = balance * price
 
   return (
     <>

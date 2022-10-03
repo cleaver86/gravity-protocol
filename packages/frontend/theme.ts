@@ -28,7 +28,7 @@ const themeProps = {
       300: '#D32E3C',
     },
     orange: {
-      200: '#F7AB19'
+      200: '#F7AB19',
     },
   },
   fonts: {

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
 import {
-  chakra,
   Accordion,
   AccordionButton,
   AccordionIcon,

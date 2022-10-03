@@ -50,7 +50,6 @@ const SummaryText = ({ children, align, fontSize, muted }) => (
  */
 function Summary({
   received,
-  collateralName,
   collateralUnits,
   collateralPrice,
   leverage,

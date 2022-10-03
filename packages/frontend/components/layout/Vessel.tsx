@@ -1,6 +1,5 @@
 import { useContext } from 'react'
 import {
-  Box,
   Flex,
   Tab,
   Tabs,
@@ -23,8 +22,7 @@ import { faBars } from '@fortawesome/pro-regular-svg-icons'
  */
 function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
   const { toggleMainNav } = useContext(MainNavContext)
-  const { loading, balances, prices } = useContext(WalletContext)
-  const [isMobileRes] = useMediaQuery('(max-width: 767px)')
+  const { balances, prices } = useContext(WalletContext)
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
 
   return (
