@@ -14,6 +14,7 @@ Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 export const options = {
   indexAxis: 'y' as const,
   responsive: true,
+  maintainAspectRatio: false,
   layout: {
     margin: {
       left: 0,
@@ -49,7 +50,6 @@ export const options = {
       },
     },
   },
-  barPercentage: 0.9,
 }
 
 export const data = {
@@ -87,8 +87,14 @@ export const data = {
 /**
  * Component
  */
-function RatioChart(): JSX.Element {
-  return <Bar height="12px" data={data} options={options} />
+function RatioChart({ barPercentage }): JSX.Element {
+  const o = { ...options, barPercentage }
+
+  return <Bar height="20px" data={data} options={o} />
+}
+
+RatioChart.defaultProps = {
+  barPercentage: 1,
 }
 
 export default RatioChart

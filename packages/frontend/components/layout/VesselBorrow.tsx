@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Flex,
   FormControl,
+  SimpleGrid,
   Text,
 } from '@chakra-ui/react'
 import Label from '../Label'
@@ -21,7 +22,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
   const [availableCollateral, setAvailableCollateral] = useState(balance)
   const [maxBorrowAmount, setMaxBorrowAmount] = useState(0)
   const [borrowMode, setBorrowMode] = useState('normal')
-  const [leverage, setLeverage] = useState(0.0)
+  const [leverage, setLeverage] = useState(0)
   const { control, handleSubmit, setValue, watch } = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -48,14 +49,26 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
     setValue('borrow', '')
   }, [depositedCollateral, balance, price, name, setValue])
 
+  useEffect(() => {
+    if (borrowMode === 'leverage') {
+      setLeverage(1)
+    } else {
+      setLeverage(0)
+    }
+  }, [borrowMode])
+
   return (
-    <>
+    <SimpleGrid
+      columns={{ sm: 1, lg: 2 }}
+      spacing={[{ base: 10, '2xl': 20 }]}
+      marginBottom="90px"
+    >
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <Controller
           control={control}
           name="collateral"
           render={({ field: { onChange, ...rest } }) => (
-            <FormControl marginBottom="40px">
+            <FormControl marginBottom="50px">
               <CurrencyInput
                 currency="ETH"
                 label="Deposit Collateral"
@@ -77,7 +90,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
             </FormControl>
           )}
         />
-        <Box marginBottom="40px">
+        <Box marginBottom="50px">
           <Label marginBottom="20px">Borrow Mode</Label>
           <Flex>
             <ButtonGroup isAttached variant="outline">
@@ -102,10 +115,11 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
                 Leverage
               </Button>
             </ButtonGroup>
-
-            <Text alignSelf="center" marginLeft="auto">
-              {leverage}X Leverage
-            </Text>
+            {leverage > 0 && (
+              <Text alignSelf="center" marginLeft="auto">
+                {leverage}X Leverage
+              </Text>
+            )}
           </Flex>
           {borrowMode === 'leverage' && (
             <LeverageSlider onChange={(val) => setLeverage(parseFloat(val))} />
@@ -116,7 +130,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
             control={control}
             name="borrow"
             render={({ field: { onChange, ...rest } }) => (
-              <FormControl marginBottom="40px">
+              <FormControl marginBottom="50px">
                 <CurrencyInput
                   currency="VUSD"
                   label="Borrow Amount"
@@ -139,19 +153,20 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
             )}
           />
         )}
-        <Button type="submit">Borrow</Button>
       </form>
       <Box>
         {/* {borrow > 0 && ( */}
         <Summary
           received={borrow}
+          collateralName={name}
           collateralPrice={price}
           collateralUnits={depositedCollateral}
+          leverage={leverage}
           maxLoanToValue={maxLoanToValue}
         />
         {/* )} */}
       </Box>
-    </>
+    </SimpleGrid>
   )
 }
 

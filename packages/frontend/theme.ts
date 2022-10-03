@@ -27,7 +27,9 @@ const themeProps = {
       100: '#FF505E',
       300: '#D32E3C',
     },
-    orange: '#F7AB19',
+    orange: {
+      200: '#F7AB19'
+    },
   },
   fonts: {
     heading: `'Poppins', sans-serif`,

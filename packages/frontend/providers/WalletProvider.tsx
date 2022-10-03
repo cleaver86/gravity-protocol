@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from 'react'
+import { createContext } from 'react'
 import useWallet from '../hooks/useWallet'
 
 export const WalletContext = createContext()

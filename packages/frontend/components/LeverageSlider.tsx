@@ -17,7 +17,7 @@ function LeverageSlider({ onChange }): JSX.Element {
       max={10}
       step={1}
       size="lg"
-      marginTop="40px"
+      margin="40px 0 20px 0"
       onChange={onChange}
     >
       <SliderMark

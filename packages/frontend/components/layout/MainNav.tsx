@@ -1,4 +1,16 @@
-import { Box, Link, Flex, Spacer, VStack } from '@chakra-ui/react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  Box,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  Link,
+  Flex,
+  Spacer,
+  VStack,
+  useDisclosure,
+  useMediaQuery,
+} from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import FaIcon from '../FaIcon'
@@ -15,9 +27,14 @@ import {
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons'
 import GravityLogo from '../../public/images/logo-gravity.svg'
+import GravityIcon from '../../public/images/icon-gravity.svg'
+
+const NAV_WIDTH_FULL = '250px'
+const NAV_WIDTH_SMALL = '75px'
 
 const NavItem = ({ text, icon, route }) => {
   const router = useRouter()
+
   let active
 
   if (route === '/') {
@@ -30,46 +47,71 @@ const NavItem = ({ text, icon, route }) => {
   const hoverColor = active ? 'purple.300' : 'white'
 
   return (
-    <Flex role="group">
-      <Flex width="30px" justifyContent="center">
-        <FaIcon
-          height="23px"
-          icon={icon}
-          color={color}
-          _groupHover={{ color: hoverColor }}
-        />
-      </Flex>
-      <NextLink href={route} passHref>
+    <NextLink href={route} passHref>
+      <Flex
+        role="group"
+        borderRadius="40px"
+        alignItems="center"
+        marginTop="5px !important"
+        padding={[{ base: '0 20px 0 10px', xl: '0', '2xl': '0 20px 0 10px' }]}
+        _hover={{ background: 'purple.500', cursor: 'pointer' }}
+      >
+        <Flex
+          w="50px"
+          h="50px"
+          justifyContent="center"
+          alignItems="center"
+          padding="10px"
+        >
+          <FaIcon
+            height="23px"
+            icon={icon}
+            color={color}
+            _groupHover={{ color: hoverColor }}
+          />
+        </Flex>
         <Link
           color={color}
           fontWeight="medium"
-          marginLeft="20px"
+          marginLeft="10px"
+          marginTop="3px"
           _groupHover={{ color: hoverColor, textDecoration: 'none' }}
+          display={[{ base: 'inline', xl: 'none', '2xl': 'inline' }]}
         >
           {text}
         </Link>
-      </NextLink>
-    </Flex>
+      </Flex>
+    </NextLink>
   )
 }
 
 const SocialIconLink = ({ href, icon }) => (
-  <Link href={href} role="group">
-    <FaIcon
-      height="23px"
-      icon={icon}
-      color="gray.200"
-      _groupHover={{ color: 'white' }}
-    />
+  <Link href={href} role="group" padding={[{ base: '2px 0', '2xl': '0' }]}>
+    <Flex
+      w="50px"
+      h="50px"
+      justifyContent="center"
+      alignItems="center"
+      padding="10px"
+      borderRadius="40px"
+      _hover={{ background: 'purple.500' }}
+    >
+      <FaIcon
+        height="23px"
+        icon={icon}
+        color="gray.100"
+        _groupHover={{ color: 'white' }}
+      />
+    </Flex>
   </Link>
 )
 
-/**
- * Component
- */
-function MainNav(): JSX.Element {
-  return (
+const Nav = () => (
+  <Box h="100%" zIndex={100} background="purple.800">
     <Flex
+      width={[
+        { base: NAV_WIDTH_FULL, xl: NAV_WIDTH_SMALL, '2xl': NAV_WIDTH_FULL },
+      ]}
       h="100%"
       direction="column"
       alignItems="center"
@@ -79,13 +121,33 @@ function MainNav(): JSX.Element {
       background="purple.800"
     >
       <Box marginTop="3px">
-        <GravityLogo />
+        <Box
+          display={[
+            {
+              base: 'block',
+              xl: 'none',
+              '2xl': 'block',
+            },
+          ]}
+          _hover={{ cursor: 'pointer' }}
+        >
+          <NextLink href="/">
+            <GravityLogo />
+          </NextLink>
+        </Box>
+        <Box
+          display={[{ base: 'none', xl: 'block', '2xl': 'none' }]}
+          _hover={{ cursor: 'pointer' }}
+        >
+          <NextLink href="/">
+            <GravityIcon />
+          </NextLink>
+        </Box>
       </Box>
       <VStack
-        spacing="32px"
-        marginLeft="-40px"
         alignItems="left"
         marginTop="50px"
+        marginLeft={[{ base: '-50px', xl: '0', '2xl': '-50px' }]}
       >
         <NavItem text="Home" icon={faHouse} route="/" />
         <NavItem text="Borrow" icon={faArrowRightArrowLeft} route="/borrow" />
@@ -96,8 +158,10 @@ function MainNav(): JSX.Element {
       <Spacer />
       <Flex
         w="100%"
+        direction={[{ base: 'row', xl: 'column', '2xl': 'row' }]}
         justifyContent="space-around"
-        padding="20px 0"
+        alignItems="center"
+        padding="8px 0"
         borderTop="1px solid"
         borderColor="gray.500"
       >
@@ -107,7 +171,7 @@ function MainNav(): JSX.Element {
         />
         <SocialIconLink
           icon={faGithub}
-          href="https://github.com/GravityProtocol"
+          href="https://github.com/Gravity-Finance"
         />
         <SocialIconLink
           icon={faDiscord}
@@ -115,6 +179,53 @@ function MainNav(): JSX.Element {
         />
       </Flex>
     </Flex>
+  </Box>
+)
+
+/**
+ * Component
+ */
+function MainNav({ toggleNav, onToggleNav }): JSX.Element {
+  const [isLargeRes] = useMediaQuery('(min-width: 1280px)')
+  const [drawerAnimating, setDrawerAnimating] = useState(true)
+  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: false })
+
+  useEffect(() => {
+    if (toggleNav && !isOpen) {
+      setDrawerAnimating(true)
+      onOpen()
+    }
+  }, [toggleNav])
+
+  useEffect(() => {
+    if (isOpen) {
+      setDrawerAnimating(false)
+      onToggleNav()
+    }
+  }, [isOpen])
+
+  return (
+    <>
+      {(isLargeRes && <Nav />) ||
+        ((isOpen || drawerAnimating) && (
+          <Drawer
+            placement="left"
+            onClose={() => {
+              setDrawerAnimating(true)
+              onClose()
+            }}
+            isOpen={isOpen}
+            onCloseComplete={() => {
+              setDrawerAnimating(false)
+            }}
+          >
+            <DrawerOverlay />
+            <DrawerContent w={NAV_WIDTH_FULL} maxW={NAV_WIDTH_FULL}>
+              <Nav />
+            </DrawerContent>
+          </Drawer>
+        ))}
+    </>
   )
 }
 

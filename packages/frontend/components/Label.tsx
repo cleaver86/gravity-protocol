@@ -1,8 +1,8 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Text, Tooltip } from '@chakra-ui/react'
 import FaIcon from '../components/FaIcon'
 import { faCircleInfo } from '@fortawesome/pro-regular-svg-icons'
 
-const Label = ({ children, info, orientation, ...rest }) => {
+const Label = ({ children, info, orientation, tooltip, ...rest }) => {
   return (
     <Text
       fontSize="sm"
@@ -15,9 +15,11 @@ const Label = ({ children, info, orientation, ...rest }) => {
     >
       <Flex display="inline-flex" alignItems="center">
         {info && (
-          <Box marginTop="-2px" marginRight="5px">
-            <FaIcon height="15px" icon={faCircleInfo} color="gray.300" />
-          </Box>
+          <Tooltip label={tooltip} borderRadius="3px">
+            <Box marginTop="-2px" marginRight="5px">
+              <FaIcon height="15px" icon={faCircleInfo} color="gray.300" />
+            </Box>
+          </Tooltip>
         )}
         {children}
       </Flex>

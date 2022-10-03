@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import { Chart, ArcElement } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
-import { faLacrosseStick } from '@fortawesome/pro-regular-svg-icons'
 
 Chart.register(ArcElement)
 
@@ -20,7 +19,10 @@ function LoanValueChart(): JSX.Element {
   return (
     <Box transform="rotateY(180deg);">
       <Doughnut
-        options={animate === false && { animation: { duration: 0 } }}
+        options={{
+          animation: { duration: animate === false ? 0 : 1000 },
+          responsive: true,
+        }}
         data={{
           datasets: [
             {

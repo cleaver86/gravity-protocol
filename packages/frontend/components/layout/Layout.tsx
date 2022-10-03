@@ -1,11 +1,12 @@
+import React, { useState } from 'react'
 import { Container, Flex, Box } from '@chakra-ui/react'
 import { useEthers, useNotifications } from '@usedapp/core'
-import React, { useState } from 'react'
 import Notifications from '../Notifications'
 import ConnectWallet from '../ConnectWallet'
 import Wallet from '../Wallet'
 import MainNav from './MainNav'
 import Head, { MetaProps } from './Head'
+import { MainNavProvider } from '../../providers/MainNavProvider'
 import { WalletProvider } from '../../providers/WalletProvider'
 
 // Extends `window` to add `ethereum`.
@@ -39,38 +40,64 @@ const Gradiant = () => (
 const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
   const { account, deactivate } = useEthers()
   const [wallet, setWallet] = useState()
+  const [toggleNav, setToggleNav] = useState(false)
   const { notifications } = useNotifications()
 
   return (
     <>
       <Head customMeta={customMeta} />
-      <Flex h="calc(100vh)" justify="space-between">
-        <Gradiant />
-        {account ? (
-          <WalletProvider account={account}>
-            <Box w="250px" h="100%" position="relative" zIndex={50}>
-              <MainNav />
-            </Box>
-            <Box w="1100px" h="100%" position="relative" zIndex={50}>
-              <Container h="100%" paddingTop="40px" maxWidth="container.xl">
-                {children}
-                <Notifications notifications={notifications} />
-              </Container>
-            </Box>
-            <Box w="300px" h="100%" position="relative" zIndex={50}>
-              <Wallet name={wallet} account={account} deactivate={deactivate} />
-            </Box>
-          </WalletProvider>
-        ) : (
-          <Box width="100%" padding="0 600px 0 600px">
-            <ConnectWallet
-              onConnect={(wallet) => {
-                setWallet(wallet)
+      {account ? (
+        <WalletProvider account={account}>
+          <Flex
+            direction={[{ base: 'column', xl: 'row' }]}
+            h="calc(100vh)"
+            justify="space-between"
+            overflow="hidden"
+          >
+            <Gradiant />
+            <MainNav
+              toggleNav={toggleNav}
+              onToggleNav={() => {
+                setToggleNav(false)
               }}
             />
-          </Box>
-        )}
-      </Flex>
+            <Container
+              h="100%"
+              padding="0 30px"
+              paddingTop={[{ base: '10px', xl: '40px' }]}
+              maxWidth="68.750em"
+              overflow="scroll"
+              position="relative"
+              zIndex={50}
+            >
+              <MainNavProvider
+                toggleMainNav={() => {
+                  setToggleNav(true)
+                }}
+              >
+                {children}
+              </MainNavProvider>
+              <Notifications notifications={notifications} />
+            </Container>
+
+            <Box
+              w={[{ base: '100%', xl: '300px' }]}
+              position="relative"
+              zIndex={50}
+            >
+              <Wallet name={wallet} account={account} deactivate={deactivate} />
+            </Box>
+          </Flex>
+        </WalletProvider>
+      ) : (
+        <Box width="100%" padding="0 600px 0 600px">
+          <ConnectWallet
+            onConnect={(wallet) => {
+              setWallet(wallet)
+            }}
+          />
+        </Box>
+      )}
     </>
   )
 }
