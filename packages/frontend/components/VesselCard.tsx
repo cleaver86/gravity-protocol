@@ -1,9 +1,8 @@
-import { Badge, Box, Flex, Heading, Text, Spacer } from '@chakra-ui/react'
+import { Box, Flex, Heading, Text, Spacer } from '@chakra-ui/react'
 import NextLink from 'next/link'
-import FaIcon from './FaIcon'
-import { faCircleInfo } from '@fortawesome/pro-regular-svg-icons'
 import Label from './Label'
 import MonetaryText from './MonetaryText'
+import Status from './Status'
 
 const getLtvColor = (ltv) => {
   if (ltv < 30) {
@@ -34,14 +33,17 @@ const Vessel = ({
         border="1px solid"
         borderColor="gray.500"
         borderRadius="5px"
-        minWidth="500px"
+        minWidth={[{ base: 'none', md: '500px' }]}
         _hover={{
           border: '1px solid',
           borderColor: 'gray.300',
           cursor: 'pointer',
         }}
       >
-        <Box padding="20px 30px" minHeight="250px">
+        <Box
+          padding={[{ base: '20px 20px', md: '20px 30px' }]}
+          minHeight="280px"
+        >
           <Flex alignItems="flex-end" marginBottom="40px">
             {icon}
             <Heading fontSize="2xl" fontWeight="medium" marginLeft="10px">
@@ -49,27 +51,7 @@ const Vessel = ({
             </Heading>
 
             <Spacer />
-            {systemLtv > 90 && (
-              <Badge
-                variant="solid"
-                background="red.300"
-                opacity="1"
-                borderRadius="20px"
-                padding="5px 15px"
-              >
-                <Flex alignItems="center">
-                  <FaIcon height="15px" icon={faCircleInfo} color="white" />
-                  <Text
-                    fontSize="small"
-                    fontWeight="semibold"
-                    color="white"
-                    marginLeft="5px"
-                  >
-                    Recovery Mode
-                  </Text>
-                </Flex>
-              </Badge>
-            )}
+            {systemLtv > 65 && <Status type="recovery" />}
           </Flex>
           <Flex>
             <Flex direction="column" w="60%">
@@ -115,14 +97,14 @@ const Vessel = ({
           </Flex>
         </Box>
         <Box
-          padding="20px 30px"
+          padding={[{ base: '20px 20px', md: '20px 30px' }]}
           backgroundColor="purple.800"
           borderTop="1px solid"
           borderColor="gray.500"
           borderBottomRadius="5px"
         >
           <Flex>
-            <Flex w="60%" alignItems="center">
+            <Flex w="60%" alignItems="flex-end">
               <Label orientation="horizontal" info>
                 One-Time Fee
               </Label>
@@ -130,7 +112,7 @@ const Vessel = ({
                 {oneTimeFee.toFixed(2)}%
               </Text>
             </Flex>
-            <Flex w="40%" alignItems="center">
+            <Flex w="40%" alignItems="flex-end">
               <Label orientation="horizontal" info>
                 Max LTV
               </Label>

@@ -10,7 +10,7 @@ function IconHeading({ children, icon, isFontAwesome, ...rest }): JSX.Element {
       display="flex"
       alignItems="center"
       fontWeight="medium"
-      fontSize="3xl"
+      fontSize="2xl"
       as="h1"
       mb="8"
       {...rest}

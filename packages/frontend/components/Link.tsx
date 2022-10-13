@@ -3,17 +3,17 @@ import { Link as ChakraLink } from '@chakra-ui/react'
 /**
  * Component
  */
-function Link({ children, href }): JSX.Element {
+function Link({ children, href, ...rest }): JSX.Element {
   return (
     <ChakraLink
       href={href}
       color="purple.300"
-      fontSize="sm"
+      fontSize="md"
       fontWeight="medium"
-      marginLeft="5px"
       _hover={{
         textDecoration: 'underline',
       }}
+      {...rest}
     >
       {children}
     </ChakraLink>

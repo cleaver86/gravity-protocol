@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 /* istanbul ignore next */
 /** keep typescript happy */
-// const noop = () => {};
+const noop = () => {}
 
 const useInterval = (callback, delay, immediate) => {
   const savedCallback = useRef(noop)

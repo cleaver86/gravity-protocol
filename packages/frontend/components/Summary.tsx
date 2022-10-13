@@ -89,14 +89,16 @@ function Summary({
           </SummaryLabel>
         </Box>
         <Box>
-          <SummaryText align="right">{loanToValue * 100}</SummaryText>
+          <SummaryText align="right">
+            {(loanToValue * 100).toFixed(2)}
+          </SummaryText>
           <SummaryMonetaryText currency="USD">
             {collateralValue}
           </SummaryMonetaryText>
           {leverage > 0 && <SummaryText align="right">{leverage}</SummaryText>}
           <SummaryMonetaryText currency="VUSD">{received}</SummaryMonetaryText>
           <SummaryMonetaryText currency="VUSD">{200}</SummaryMonetaryText>
-          <SummaryText align="right">{0.5}</SummaryText>
+          <SummaryText align="right">{(0.5).toFixed(2)}</SummaryText>
           <SummaryMonetaryText currency="VUSD">
             {getDebtFromBorrow(received, 0.005)}
           </SummaryMonetaryText>
@@ -138,7 +140,7 @@ function Summary({
             )}
           </SummaryMonetaryText>
           <SummaryText align="right" muted>
-            {maxLoanToValue * 100}
+            {(maxLoanToValue * 100).toFixed(2)}
           </SummaryText>
         </Box>
         <Box>
@@ -153,7 +155,7 @@ function Summary({
           </SummaryText>
         </Box>
       </SimpleGrid>
-      <Alert>LTV Warning Here</Alert>
+      <Alert status="warning">LTV Warning Here</Alert>
       <Button w="100%" size="lg" borderRadius="40px" onClick={onBorrow}>
         Borrow
       </Button>

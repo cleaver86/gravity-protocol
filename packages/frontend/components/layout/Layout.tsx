@@ -90,13 +90,13 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
           </Flex>
         </WalletProvider>
       ) : (
-        <Box width="100%" padding="0 600px 0 600px">
+        <Flex width="100%" height="100vh" justifyContent="center">
           <ConnectWallet
             onConnect={(wallet) => {
               setWallet(wallet)
             }}
           />
-        </Box>
+        </Flex>
       )}
     </>
   )

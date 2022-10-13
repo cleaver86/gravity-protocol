@@ -8,6 +8,7 @@ import {
   Flex,
   Spacer,
   VStack,
+  Tooltip,
   useDisclosure,
   useMediaQuery,
 } from '@chakra-ui/react'
@@ -32,7 +33,7 @@ import GravityIcon from '../../public/images/icon-gravity.svg'
 const NAV_WIDTH_FULL = '250px'
 const NAV_WIDTH_SMALL = '75px'
 
-const NavItem = ({ text, icon, route }) => {
+const NavItem = ({ text, icon, route, disableTooltip }) => {
   const router = useRouter()
 
   let active
@@ -56,20 +57,22 @@ const NavItem = ({ text, icon, route }) => {
         padding={[{ base: '0 20px 0 10px', xl: '0', '2xl': '0 20px 0 10px' }]}
         _hover={{ background: 'purple.500', cursor: 'pointer' }}
       >
-        <Flex
-          w="50px"
-          h="50px"
-          justifyContent="center"
-          alignItems="center"
-          padding="10px"
-        >
-          <FaIcon
-            height="23px"
-            icon={icon}
-            color={color}
-            _groupHover={{ color: hoverColor }}
-          />
-        </Flex>
+        <Tooltip label={text} placement="right" isDisabled={disableTooltip}>
+          <Flex
+            w="50px"
+            h="50px"
+            justifyContent="center"
+            alignItems="center"
+            padding="10px"
+          >
+            <FaIcon
+              height="23px"
+              icon={icon}
+              color={color}
+              _groupHover={{ color: hoverColor }}
+            />
+          </Flex>
+        </Tooltip>
         <Link
           color={color}
           fontWeight="medium"
@@ -85,108 +88,154 @@ const NavItem = ({ text, icon, route }) => {
   )
 }
 
-const SocialIconLink = ({ href, icon }) => (
+NavItem.defaultProps = {
+  disableTooltip: false,
+}
+
+const SocialIconLink = ({ href, icon, tooltip, tooltipPlacement }) => (
   <Link href={href} role="group" padding={[{ base: '2px 0', '2xl': '0' }]}>
-    <Flex
-      w="50px"
-      h="50px"
-      justifyContent="center"
-      alignItems="center"
-      padding="10px"
-      borderRadius="40px"
-      _hover={{ background: 'purple.500' }}
-    >
-      <FaIcon
-        height="23px"
-        icon={icon}
-        color="gray.100"
-        _groupHover={{ color: 'white' }}
-      />
-    </Flex>
+    <Tooltip label={tooltip} placement={tooltipPlacement}>
+      <Flex
+        w="50px"
+        h="50px"
+        justifyContent="center"
+        alignItems="center"
+        padding="10px"
+        borderRadius="40px"
+        _hover={{ background: 'purple.500' }}
+      >
+        <FaIcon
+          height="23px"
+          icon={icon}
+          color="gray.100"
+          _groupHover={{ color: 'white' }}
+        />
+      </Flex>
+    </Tooltip>
   </Link>
 )
 
-const Nav = () => (
-  <Box h="100%" zIndex={100} background="purple.800">
-    <Flex
-      width={[
-        { base: NAV_WIDTH_FULL, xl: NAV_WIDTH_SMALL, '2xl': NAV_WIDTH_FULL },
-      ]}
-      h="100%"
-      direction="column"
-      alignItems="center"
-      paddingTop="40px"
-      borderRight="1px solid"
-      borderColor="gray.500"
-      background="purple.800"
-    >
-      <Box marginTop="3px">
-        <Box
-          display={[
-            {
-              base: 'block',
-              xl: 'none',
-              '2xl': 'block',
-            },
-          ]}
-          _hover={{ cursor: 'pointer' }}
-        >
-          <NextLink href="/">
-            <GravityLogo />
-          </NextLink>
-        </Box>
-        <Box
-          display={[{ base: 'none', xl: 'block', '2xl': 'none' }]}
-          _hover={{ cursor: 'pointer' }}
-        >
-          <NextLink href="/">
-            <GravityIcon />
-          </NextLink>
-        </Box>
-      </Box>
-      <VStack
-        alignItems="left"
-        marginTop="50px"
-        marginLeft={[{ base: '-50px', xl: '0', '2xl': '-50px' }]}
-      >
-        <NavItem text="Home" icon={faHouse} route="/" />
-        <NavItem text="Borrow" icon={faArrowRightArrowLeft} route="/borrow" />
-        <NavItem text="Pool" icon={faScaleBalanced} route="/pool" />
-        <NavItem text="Stake" icon={faVault} route="/stake" />
-        <NavItem text="Docs" icon={faBook} route="/docs" />
-      </VStack>
-      <Spacer />
+const Nav = ({ disableTooltip }) => {
+  const socialMediaTooltipPlacement = disableTooltip ? 'top' : 'right'
+
+  return (
+    <Box h="100%" zIndex={100} background="purple.800">
       <Flex
-        w="100%"
-        direction={[{ base: 'row', xl: 'column', '2xl': 'row' }]}
-        justifyContent="space-around"
+        width={[
+          { base: NAV_WIDTH_FULL, xl: NAV_WIDTH_SMALL, '2xl': NAV_WIDTH_FULL },
+        ]}
+        h="100%"
+        direction="column"
         alignItems="center"
-        padding="8px 0"
-        borderTop="1px solid"
+        paddingTop="40px"
+        borderRight="1px solid"
         borderColor="gray.500"
+        background="purple.800"
       >
-        <SocialIconLink
-          icon={faTwitter}
-          href="https://twitter.com/GravityProtocol"
-        />
-        <SocialIconLink
-          icon={faGithub}
-          href="https://github.com/Gravity-Finance"
-        />
-        <SocialIconLink
-          icon={faDiscord}
-          href="https://discord.com/invite/GravityProtocol"
-        />
+        <Box marginTop="3px">
+          <Box
+            display={[
+              {
+                base: 'block',
+                xl: 'none',
+                '2xl': 'block',
+              },
+            ]}
+            _hover={{ cursor: 'pointer' }}
+          >
+            <NextLink href="/">
+              <GravityLogo />
+            </NextLink>
+          </Box>
+          <Box
+            display={[{ base: 'none', xl: 'block', '2xl': 'none' }]}
+            _hover={{ cursor: 'pointer' }}
+          >
+            <NextLink href="/">
+              <GravityIcon />
+            </NextLink>
+          </Box>
+        </Box>
+        <VStack
+          alignItems="left"
+          marginTop="50px"
+          marginLeft={[{ base: '-50px', xl: '0', '2xl': '-50px' }]}
+        >
+          <NavItem
+            text="Home"
+            icon={faHouse}
+            route="/"
+            disableTooltip={disableTooltip}
+          />
+          <NavItem
+            text="Borrow"
+            icon={faArrowRightArrowLeft}
+            route="/borrow"
+            disableTooltip={disableTooltip}
+          />
+          <NavItem
+            text="Pool"
+            icon={faScaleBalanced}
+            route="/pool"
+            disableTooltip={disableTooltip}
+          />
+          <NavItem
+            text="Stake"
+            icon={faVault}
+            route="/stake"
+            disableTooltip={disableTooltip}
+          />
+          <NavItem
+            text="Docs"
+            icon={faBook}
+            route="/docs"
+            disableTooltip={disableTooltip}
+          />
+        </VStack>
+        <Spacer />
+        <Flex
+          w="100%"
+          direction={[{ base: 'row', xl: 'column', '2xl': 'row' }]}
+          justifyContent="space-around"
+          alignItems="center"
+          padding="8px 0"
+          borderTop="1px solid"
+          borderColor="gray.500"
+        >
+          <SocialIconLink
+            icon={faTwitter}
+            href="https://twitter.com/GravityProtocol"
+            tooltip="Twitter"
+            tooltipPlacement={socialMediaTooltipPlacement}
+          />
+          <SocialIconLink
+            icon={faGithub}
+            href="https://github.com/Gravity-Finance"
+            tooltip="Github"
+            tooltipPlacement={socialMediaTooltipPlacement}
+          />
+          <SocialIconLink
+            icon={faDiscord}
+            href="https://discord.com/invite/GravityProtocol"
+            tooltip="Discord"
+            tooltipPlacement={socialMediaTooltipPlacement}
+          />
+        </Flex>
       </Flex>
-    </Flex>
-  </Box>
-)
+    </Box>
+  )
+}
+
+Nav.defaultProps = {
+  disableTooltip: false,
+}
 
 /**
  * Component
  */
 function MainNav({ toggleNav, onToggleNav }): JSX.Element {
   const [isLargeRes] = useMediaQuery('(min-width: 1280px)')
+  const [isExtraLargeRes] = useMediaQuery('(min-width: 1536px)')
   const [drawerAnimating, setDrawerAnimating] = useState(true)
   const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: false })
 
@@ -206,7 +255,7 @@ function MainNav({ toggleNav, onToggleNav }): JSX.Element {
 
   return (
     <>
-      {(isLargeRes && <Nav />) ||
+      {(isLargeRes && <Nav disableTooltip={isExtraLargeRes} />) ||
         ((isOpen || drawerAnimating) && (
           <Drawer
             placement="left"
@@ -221,7 +270,7 @@ function MainNav({ toggleNav, onToggleNav }): JSX.Element {
           >
             <DrawerOverlay />
             <DrawerContent w={NAV_WIDTH_FULL} maxW={NAV_WIDTH_FULL}>
-              <Nav />
+              <Nav disableTooltip />
             </DrawerContent>
           </Drawer>
         ))}

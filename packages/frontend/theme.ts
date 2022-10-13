@@ -22,11 +22,12 @@ const themeProps = {
       800: '#251D32',
       900: '#130E1C',
     },
-    green: '#19F785',
     red: {
       100: '#FF505E',
       300: '#D32E3C',
     },
+    green: '#19F785',
+    blue: '#6755FF',
     orange: {
       200: '#F7AB19',
     },

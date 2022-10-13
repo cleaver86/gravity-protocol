@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import {
   Chart,
   BarElement,
@@ -52,45 +53,38 @@ export const options = {
   },
 }
 
-export const data = {
+const data = {
   labels: [''],
-  datasets: [
-    {
-      data: [40],
-      backgroundColor: '#D079FF',
-      borderWidth: 0,
-      borderRadius: {
-        topLeft: 100,
-        bottomLeft: 100,
-      },
-      borderSkipped: false,
-    },
-    {
-      data: [40],
-      backgroundColor: '#19F785',
-      borderWidth: 0,
-      borderSkipped: false,
-    },
-    {
-      data: [20],
-      backgroundColor: '#F7AB19',
-      borderWidth: 0,
-      borderRadius: {
-        topRight: 100,
-        bottomRight: 100,
-      },
-      borderSkipped: false,
-    },
-  ],
+  datasets: [],
 }
 
 /**
  * Component
  */
-function RatioChart({ barPercentage }): JSX.Element {
+function RatioChart({ datasets, barPercentage }): JSX.Element {
   const o = { ...options, barPercentage }
+  const chartRef = useRef(null)
 
-  return <Bar height="20px" data={data} options={o} />
+  // Hack to allow fluid animations on data change
+  useEffect(() => {
+    const chart = chartRef.current
+
+    if (chart) {
+      datasets.forEach((dataset, i) => {
+        const internalChartDataset = chart.data.datasets[i]
+
+        if (internalChartDataset) {
+          internalChartDataset.data = dataset.data
+          internalChartDataset.borderRadius = dataset.borderRadius
+        } else {
+          chart.data.datasets.push(dataset)
+        }
+      })
+      chart.update()
+    }
+  }, [datasets])
+
+  return <Bar ref={chartRef} height="20px" data={data} options={o} />
 }
 
 RatioChart.defaultProps = {

@@ -1,15 +1,42 @@
 import { Alert as ChakraAlert, Text } from '@chakra-ui/react'
 import FaIcon from './FaIcon'
-import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons'
+import {
+  faCircleExclamation,
+  faCircleInfo,
+} from '@fortawesome/pro-regular-svg-icons'
+
+const icons = {
+  info: {
+    svg: faCircleInfo,
+    color: 'gray.200',
+  },
+  warning: {
+    svg: faCircleExclamation,
+    color: 'orange.200',
+  },
+}
 
 /**
  * Component
  */
-function Alert({ children }): JSX.Element {
+function Alert({ children, status, ...rest }): JSX.Element {
   return (
-    <ChakraAlert status="warning" borderRadius="5px" marginBottom="20px">
-      <FaIcon icon={faCircleExclamation} height="20px" color="orange.200" />
-      <Text marginLeft="10px">{children}</Text>
+    <ChakraAlert
+      status={status}
+      justifyContent="center"
+      borderRadius="5px"
+      marginBottom="20px"
+      padding="20px 40px"
+      {...rest}
+    >
+      <FaIcon
+        icon={icons[status].svg}
+        height="20px"
+        color={icons[status].color}
+      />
+      <Text fontWeight="medium" marginLeft="10px">
+        {children}
+      </Text>
     </ChakraAlert>
   )
 }

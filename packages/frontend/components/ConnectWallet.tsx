@@ -12,6 +12,7 @@ function ConnectWallet({ onConnect }): JSX.Element {
       direction="column"
       alignItems="center"
       justifyContent="center"
+      minWidth="400px"
     >
       <Button
         justifyContent="space-between"

@@ -13,6 +13,7 @@ import Label from '../Label'
 import CurrencyInput from '../CurrencyInput'
 import LeverageSlider from '../LeverageSlider'
 import Summary from '../Summary'
+import Alert from '../Alert'
 import { getFormattedCurrency } from '../../utils/currency'
 
 /**
@@ -61,6 +62,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
     <SimpleGrid
       columns={{ sm: 1, lg: 2 }}
       spacing={[{ base: 10, '2xl': 20 }]}
+      gridGap={[{ base: 'none', lg: '2.5rem' }]}
       marginBottom="90px"
     >
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -155,16 +157,24 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
         )}
       </form>
       <Box>
-        {/* {borrow > 0 && ( */}
-        <Summary
-          received={borrow}
-          collateralName={name}
-          collateralPrice={price}
-          collateralUnits={depositedCollateral}
-          leverage={leverage}
-          maxLoanToValue={maxLoanToValue}
-        />
-        {/* )} */}
+        {(!depositedCollateral && (
+          <Alert status="info">Deposit collateral to start borrowing.</Alert>
+        )) ||
+          (!borrow && (
+            <Alert status="info" marginTop={[{ base: 'none', lg: '140px' }]}>
+              Select a borrow mode and amount.
+            </Alert>
+          )) ||
+          (borrow > 0 && (
+            <Summary
+              received={borrow}
+              collateralName={name}
+              collateralPrice={price}
+              collateralUnits={depositedCollateral}
+              leverage={leverage}
+              maxLoanToValue={maxLoanToValue}
+            />
+          ))}
       </Box>
     </SimpleGrid>
   )

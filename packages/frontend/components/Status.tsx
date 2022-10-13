@@ -1,6 +1,24 @@
 import { Badge, Text } from '@chakra-ui/react'
 import FaIcon from './FaIcon'
-import { faCheckCircle } from '@fortawesome/pro-regular-svg-icons'
+import {
+  faCheckCircle,
+  faExclamationCircle,
+} from '@fortawesome/pro-regular-svg-icons'
+
+const status = {
+  normal: {
+    color: 'green',
+    icon: faCheckCircle,
+  },
+  caution: {
+    color: 'orange.200',
+    icon: faExclamationCircle,
+  },
+  recovery: {
+    color: 'red.100',
+    icon: faExclamationCircle,
+  },
+}
 
 /**
  * Component
@@ -15,12 +33,16 @@ function Status({ type }): JSX.Element {
       padding="5px 20px 5px 18px"
       boxShadow="none"
       border="1px solid"
-      borderColor="green"
-      color="green"
+      borderColor={status[type].color}
+      color={status[type].color}
       borderRadius="20px"
       fontSize="sm"
     >
-      <FaIcon height="15px" icon={faCheckCircle} color="green" />
+      <FaIcon
+        height="15px"
+        icon={status[type].icon}
+        color={status[type].color}
+      />
       <Text marginLeft="5px">{type}</Text>
     </Badge>
   )
