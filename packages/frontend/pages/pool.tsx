@@ -1,12 +1,10 @@
 import React from 'react'
-import IconHeading from '../components/IconHeading'
-import { faBalanceScale } from '@fortawesome/pro-regular-svg-icons'
+import PoolLayout from '../components/layout/Pool'
 
 function Pool(): JSX.Element {
   return (
     <>
-      <IconHeading icon={faBalanceScale}>Stability Pool</IconHeading>
-      <text>This is the stability pool section.</text>
+      <PoolLayout />
     </>
   )
 }

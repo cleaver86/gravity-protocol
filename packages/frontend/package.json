@@ -42,6 +42,7 @@
     "blockies-ts": "^1.0.0",
     "chart.js": "^3.9.1",
     "currency.js": "^2.0.4",
+    "dayjs": "^1.11.5",
     "deepmerge": "^4.2.2",
     "ethers": "^5.7.0",
     "framer-motion": "^4",
