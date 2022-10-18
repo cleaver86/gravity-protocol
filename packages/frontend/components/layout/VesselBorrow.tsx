@@ -9,12 +9,18 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react'
+import currencyJs from 'currency.js'
 import Label from '../Label'
 import CurrencyInput from '../CurrencyInput'
 import LeverageSlider from '../LeverageSlider'
 import Summary from '../Summary'
 import Alert from '../Alert'
-import { getFormattedCurrency } from '../../utils/currency'
+import { getCurrency, getFormattedCurrency } from '../../utils/currency'
+import {
+  getLoanToValueFromBorrow,
+  getDebtFromBorrow,
+  getLiquidationPriceFromBorrow,
+} from '../../utils/totals'
 
 /**
  * Component
@@ -85,7 +91,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
                   onChange(values.floatValue)
                 }}
                 onClickPercentage={(percentage) => {
-                  onChange(balance * percentage)
+                  onChange(getCurrency(balance * percentage))
                 }}
                 {...rest}
               />
@@ -167,12 +173,101 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
           )) ||
           (borrow > 0 && (
             <Summary
-              received={borrow}
-              collateralName={name}
-              collateralPrice={price}
-              collateralUnits={depositedCollateral}
-              leverage={leverage}
-              maxLoanToValue={maxLoanToValue}
+              items={[
+                {
+                  id: 'ltv',
+                  label: 'Loan-To-Value',
+                  value: (
+                    getLoanToValueFromBorrow(
+                      borrow,
+                      depositedCollateral * price
+                    ) * 100
+                  ).toFixed(2),
+                  symbol: '%',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'collateralValue',
+                  label: 'Collateral Value',
+                  value: currencyJs(depositedCollateral * price).format({
+                    symbol: '',
+                  }),
+                  symbol: 'USD',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'leverage',
+                  label: 'Leverage',
+                  value: leverage,
+                  symbol: 'X',
+                  tooltip: 'Some Tooltip',
+                  visible: leverage > 0,
+                },
+                {
+                  id: 'receivedVusd',
+                  label: 'Received VUSD',
+                  value: currencyJs(borrow).format({
+                    symbol: '',
+                  }),
+                  symbol: 'VUSD',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'liquidationReserve',
+                  label: 'Liquidation Reserve',
+                  value: 200,
+                  symbol: 'VUSD',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'borrowingFee',
+                  label: ' Base Borrowing Fee',
+                  value: (0.5).toFixed(2),
+                  symbol: '%',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'totalDebt',
+                  label: 'Estimated Total Debt',
+                  value: getDebtFromBorrow(borrow, 0.005),
+                  symbol: 'VUSD',
+                  tooltip: 'Some Tooltip',
+                },
+              ]}
+              additionalItems={[
+                {
+                  id: 'ethPrice',
+                  label: 'ETH Price',
+                  value: price,
+                  symbol: 'ETH',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'ethPrice',
+                  label: 'Liquidation Price',
+                  value: getLiquidationPriceFromBorrow(
+                    borrow,
+                    depositedCollateral,
+                    getLoanToValueFromBorrow(
+                      borrow,
+                      depositedCollateral * price
+                    )
+                  ),
+                  symbol: 'ETH',
+                  tooltip: 'Some Tooltip',
+                },
+                {
+                  id: 'ltvLiquidation',
+                  label: 'LTV Liquidation',
+                  value: (maxLoanToValue * 100).toFixed(2),
+                  symbol: '%',
+                  tooltip: 'Some Tooltip',
+                },
+              ]}
+              proceedText="Borrow"
+              onProceed={() => {
+                // Do the thing
+              }}
             />
           ))}
       </Box>

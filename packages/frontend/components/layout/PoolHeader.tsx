@@ -6,6 +6,7 @@ import {
   Divider,
   Flex,
   SimpleGrid,
+  Text,
   useMediaQuery,
 } from '@chakra-ui/react'
 import dayjs from 'dayjs'
@@ -13,38 +14,46 @@ import Label from '../Label'
 import MonetaryText from '../MonetaryText'
 import IncomeChart from '../IncomeChart'
 
-const PoolInfo = () => (
+const PoolInfo = ({ totalDeposit, poolShare, poolTvl }) => (
   <Flex direction="column">
     <Box marginBottom="3px">
-      <Label>Deposited VUSD</Label>
-      <MonetaryText fontSize="4xl">0.00</MonetaryText>
+      <Label>Deposited</Label>
+      <MonetaryText fontSize="4xl" currency="VUSD">
+        {totalDeposit}
+      </MonetaryText>
     </Box>
     <Box marginBottom="30px">
       <Label>Pool Share</Label>
-      <MonetaryText fontSize="lg">0.00%</MonetaryText>
+      <Text fontSize="lg">{poolShare.toFixed(6)}%</Text>
     </Box>
     <Box marginBottom="30px">
       <Label>Pool TVL</Label>
-      <MonetaryText fontSize="lg">30,021,466.83</MonetaryText>
+      <MonetaryText fontSize="lg" currency="VUSD">
+        {poolTvl}
+      </MonetaryText>
     </Box>
   </Flex>
 )
 
-const ClaimInfo = () => (
+const ClaimInfo = ({ totalClaimed, totalClaimable, grvtRewards }) => (
   <Flex>
     <Divider orientation="vertical" marginRight="30px" height="90%" />
     <Flex direction="column">
       <Box marginBottom="30px">
         <Label>Total Claimed</Label>
-        <MonetaryText fontSize="lg">$10,335.83</MonetaryText>
+        <MonetaryText fontSize="lg" currency="USD">
+          {totalClaimed}
+        </MonetaryText>
       </Box>
       <Box marginBottom="30px">
         <Label>Claimable</Label>
-        <MonetaryText fontSize="lg">$0.00</MonetaryText>
+        <MonetaryText fontSize="lg" currency="USD">
+          {totalClaimable}
+        </MonetaryText>
       </Box>
       <Box marginBottom="30px">
         <Label>GRVT Rewards</Label>
-        <MonetaryText fontSize="lg">0.00</MonetaryText>
+        <MonetaryText fontSize="lg">{grvtRewards}</MonetaryText>
       </Box>
     </Flex>
   </Flex>
@@ -144,7 +153,14 @@ const getLabels = (dateRange) => {
 /**
  * Component
  */
-function PoolHeader(): JSX.Element {
+function PoolHeader({
+  totalDeposit,
+  poolShare,
+  poolTvl,
+  totalClaimed,
+  totalClaimable,
+  grvtRewards,
+}): JSX.Element {
   const [isMobileRes] = useMediaQuery('(max-width: 767px)')
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
 
@@ -156,18 +172,34 @@ function PoolHeader(): JSX.Element {
             <>
               <Flex marginBottom="20px">
                 <Box w="50%">
-                  <PoolInfo />
+                  <PoolInfo
+                    totalDeposit={totalDeposit}
+                    poolShare={poolShare}
+                    poolTvl={poolTvl}
+                  />
                 </Box>
                 <Box w="50%">
-                  <ClaimInfo />
+                  <ClaimInfo
+                    totalClaimed={totalClaimed}
+                    totalClaimable={totalClaimable}
+                    grvtRewards={grvtRewards}
+                  />
                 </Box>
               </Flex>
               <IncomeInfo />
             </>
           )) || (
             <Flex justifyContent="space-between">
-              <PoolInfo />
-              <ClaimInfo />
+              <PoolInfo
+                totalDeposit={totalDeposit}
+                poolShare={poolShare}
+                poolTvl={poolTvl}
+              />
+              <ClaimInfo
+                totalClaimed={totalClaimed}
+                totalClaimable={totalClaimable}
+                grvtRewards={grvtRewards}
+              />
               <IncomeInfo />
             </Flex>
           )}
@@ -179,8 +211,16 @@ function PoolHeader(): JSX.Element {
           spacing="3"
           marginBottom="90px"
         >
-          <PoolInfo />
-          <ClaimInfo />
+          <PoolInfo
+            totalDeposit={totalDeposit}
+            poolShare={poolShare}
+            poolTvl={poolTvl}
+          />
+          <ClaimInfo
+            totalClaimed={totalClaimed}
+            totalClaimable={totalClaimable}
+            grvtRewards={grvtRewards}
+          />
           <IncomeInfo />
         </SimpleGrid>
       )}

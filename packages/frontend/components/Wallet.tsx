@@ -44,7 +44,7 @@ const Token = ({ label, icon, balance, usd }) => {
         <Box>
           <Flex alignItems="baseLine">
             <Text fontSize="md" fontWeight="medium">
-              {balance}
+              {currency(balance).format({ symbol: '' })}
             </Text>
             <Text fontSize="sm" fontWeight="medium" marginLeft="5px">
               {label}
@@ -142,14 +142,7 @@ function Wallet({ name, account, deactivate }): JSX.Element {
             </Label>
           </AccordionButton>
           <AccordionPanel height="calc(100vh - 65px)" padding="0">
-            <Flex
-              h="100%"
-              direction="column"
-              justifyContent="space-between"
-              // borderLeft="1px solid"
-              // borderColor="gray.500"
-              // background="purple.800"
-            >
+            <Flex h="100%" direction="column" justifyContent="space-between">
               <Flex direction={'column'} padding="40px 20px 20px 20px">
                 <VStack
                   divider={<StackDivider borderColor="gray.500" />}
@@ -158,14 +151,14 @@ function Wallet({ name, account, deactivate }): JSX.Element {
                   <Token
                     label="GRVT"
                     icon={<GrvtTokenIcon />}
-                    balance={0}
-                    usd={35.0}
+                    balance={balances['grvt']}
+                    usd={prices['grvt']}
                   />
                   <Token
                     label="VUSD"
                     icon={<VusdTokenIcon />}
-                    balance={0}
-                    usd={1.0}
+                    balance={balances['vusd']}
+                    usd={prices['vusd']}
                   />
                   <Token
                     label="ETH"

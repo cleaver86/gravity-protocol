@@ -14,5 +14,5 @@ export const getLiquidationPriceFromBorrow = (
   ltv
 ) => {
   const unitPrice = currency(borrowAmount / (collateralUnits * ltv))
-  return unitPrice.subtract(0.01);
+  return unitPrice.subtract(0.01).value;
 }

@@ -11,7 +11,7 @@ export const getDecimalCount = (num) => {
   return 0
 }
 
-export const getFormattedCurrency = (value, precision, symbol = '') => {
+export const getFormattedCurrency = (value, precision = 2, symbol = '') => {
   return currencyJs(value, { precision, symbol }).format(
     (currency, options) => {
       const format = options.format(currency, options)
@@ -26,4 +26,8 @@ export const getFormattedCurrency = (value, precision, symbol = '') => {
       return format.slice(0, format.length - trimLength)
     }
   )
+}
+
+export const getCurrency = (value, precision = 2, symbol = '') => {
+  return currencyJs(value, { precision, symbol }).value;
 }
