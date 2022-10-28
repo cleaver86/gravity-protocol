@@ -194,7 +194,7 @@ const Staking = ({ staked }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {staked.total}
+          {staked.staked}
         </MonetaryText>
       </Box>
       <Box w="100%">
@@ -303,13 +303,13 @@ function HomeIndex(): JSX.Element {
       totalDebt: 35553.03,
       totalStaked: 35553.03,
       staked: {
-        staked: 1015.8,
+        staked: 35553.03,
         claimable: 0.0,
         totalClaimed: 234.54,
       },
       pool: {
         deposited: 21406.25,
-        claimable: 0.0,
+        claimable: 23702.025,
         totalClaimed: 56049.42,
       },
       vessels: [
@@ -317,7 +317,7 @@ function HomeIndex(): JSX.Element {
           name: 'eth',
           icon: <EthTokenIcon />,
           available: 216000.0,
-          debt: 12050.0,
+          debt: 26664.77,
           systemLtv: 15.0,
           personalLtv: 10.0,
           oneTimeFee: 0.5,
@@ -327,7 +327,7 @@ function HomeIndex(): JSX.Element {
           name: 'rETH',
           icon: <RethTokenIcon />,
           available: 0,
-          debt: 5250.24,
+          debt: 8888.26,
           systemLtv: 15.0,
           personalLtv: 10.0,
           oneTimeFee: 0.5,

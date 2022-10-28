@@ -62,10 +62,10 @@ function Borrow(): JSX.Element {
     <>
       <IconHeading icon={faArrowRightArrowLeft}>Borrow</IconHeading>
       <Header
-        available={216000.0}
+        available={16000.0}
         debt={10000.0}
         minted={100000.0}
-        mintCap="30m"
+        mintCap="30,000,000"
       />
       <Box padding="80px 0">
         <Wrap spacing="10" wrap="wrap">
@@ -73,22 +73,22 @@ function Borrow(): JSX.Element {
             <VesselCard
               name={CURRENCY_ETH}
               icon={<EthTokenIcon />}
-              available={216000.0}
-              debt={10000.0}
+              available={0.0}
               systemLtv={15.0}
-              personalLtv={10.0}
               oneTimeFee={0.5}
-              maxLtv={90.0}
+              maxLtv={80.0}
             />
           </WrapItem>
           <WrapItem>
             <VesselCard
               name={CURRENCY_RETH}
               icon={<RethTokenIcon />}
-              available={0.0}
+              available={16000.0}
+              debt={10000.0}
               systemLtv={15.0}
+              personalLtv={10.0}
               oneTimeFee={0.5}
-              maxLtv={80.0}
+              maxLtv={90.0}
             />
           </WrapItem>
           <WrapItem>

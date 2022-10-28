@@ -9,10 +9,11 @@ export const getDebtFromBorrow = (borrowAmount, fee) => {
 }
 
 export const getLiquidationPriceFromBorrow = (
-  borrowAmount,
+  debt,
   collateralUnits,
-  ltv
+  maxLtv
 ) => {
-  const unitPrice = currency(borrowAmount / (collateralUnits * ltv))
+  const liquidationColValue = (debt / maxLtv);
+  const unitPrice = currency(liquidationColValue / collateralUnits)
   return unitPrice.subtract(0.01).value;
 }

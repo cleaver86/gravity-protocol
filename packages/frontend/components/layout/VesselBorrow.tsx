@@ -16,6 +16,7 @@ import LeverageSlider from '../LeverageSlider'
 import Summary from '../Summary'
 import Alert from '../Alert'
 import { getCurrency, getFormattedCurrency } from '../../utils/currency'
+import { getPersonalLtvColor } from '../../utils/general'
 import {
   getLoanToValueFromBorrow,
   getDebtFromBorrow,
@@ -185,6 +186,12 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
                   ).toFixed(2),
                   symbol: '%',
                   tooltip: 'Some Tooltip',
+                  color: getPersonalLtvColor(
+                    getLoanToValueFromBorrow(
+                      borrow,
+                      depositedCollateral * price
+                    ) * 100
+                  ),
                 },
                 {
                   id: 'collateralValue',
@@ -201,7 +208,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
                   value: leverage,
                   symbol: 'X',
                   tooltip: 'Some Tooltip',
-                  visible: leverage > 0,
+                  hidden: leverage === 0,
                 },
                 {
                   id: 'receivedVusd',
@@ -248,10 +255,7 @@ function VesselBorrow({ name, balance, price, maxLoanToValue }): JSX.Element {
                   value: getLiquidationPriceFromBorrow(
                     borrow,
                     depositedCollateral,
-                    getLoanToValueFromBorrow(
-                      borrow,
-                      depositedCollateral * price
-                    )
+                    maxLoanToValue
                   ),
                   symbol: 'ETH',
                   tooltip: 'Some Tooltip',

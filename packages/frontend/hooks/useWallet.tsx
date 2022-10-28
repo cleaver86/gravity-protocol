@@ -25,7 +25,7 @@ const ethToken = {
   address: null,
   priceCurrency: CURRENCY_USD,
   precision: 6,
-  useBalance: useEtherBalance,
+  useBalance: () => BigNumber.from('0x2214622D372367546'), //useEtherBalance,
   getPrice: getEthUsdPrice,
 }
 

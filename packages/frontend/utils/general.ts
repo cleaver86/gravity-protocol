@@ -1,5 +1,4 @@
 export const getPersonalLtvColor = (ltv, recoveryMode = false) => {
-
   if (recoveryMode) {
     if (ltv < 40) {
       return '#19F785'

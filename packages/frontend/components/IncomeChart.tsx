@@ -38,7 +38,7 @@ const options = {
       beginAtZero: true,
       grid: {
         borderColor: '#726C89',
-        color: '#2B223F',
+        color: '#32274A',
       },
       ticks: {
         color: '#847D9F',
@@ -52,7 +52,7 @@ const options = {
     x: {
       grid: {
         borderColor: '#726C89',
-        color: '#2B223F',
+        color: '#32274A',
       },
       ticks: {
         color: '#847D9F',

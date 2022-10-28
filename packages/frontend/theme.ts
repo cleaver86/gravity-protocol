@@ -10,6 +10,7 @@ const themeProps = {
       100: '#E7EBF0',
       200: '#BEBBC1',
       300: '#847D9F',
+      400: '#3A3060',
       500: '#3A2C53',
     },
     purple: {

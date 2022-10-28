@@ -15,6 +15,7 @@ import IconHeading from '../IconHeading'
 import PoolHeader from '../layout/PoolHeader'
 import PoolDeposit from '../layout/PoolDeposit'
 import PoolWithdraw from '../layout/PoolWithdraw'
+import PoolClaim from '../layout/PoolClaim'
 import FaIcon from '../FaIcon'
 import { faScaleBalanced, faBars } from '@fortawesome/pro-regular-svg-icons'
 
@@ -25,6 +26,9 @@ function Pool(): JSX.Element {
   const { toggleMainNav } = useContext(MainNavContext)
   const { balances, prices } = useContext(WalletContext)
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
+  const ETH_AMOUNT_TEMP = 1.65
+  const RETH_AMOUNT_TEMP = 2.8
+  const STETH_AMOUNT_TEMP = 1.75
   const {
     totalDeposit,
     poolShare,
@@ -42,34 +46,65 @@ function Pool(): JSX.Element {
     grvtRewards: 159.56,
     claimableAssets: [
       {
-        id: 'eth',
-        amount: 1.65,
-        liquidationPrice: prices['eth'] - prices['eth'] * 10,
+        name: 'ETH',
+        amount: ETH_AMOUNT_TEMP,
+        liquidationPrice:
+          Math.round(
+            (prices['eth'] - prices['eth'] * 0.1 + Number.EPSILON) * 100
+          ) / 100,
         marketPrice: prices['eth'],
-        claimValue: 1.65 * prices['eth'],
+        claimValue:
+          Math.round((ETH_AMOUNT_TEMP * prices['eth'] + Number.EPSILON) * 100) /
+          100,
         profitLoss:
-          1.65 * prices['eth'] - 1.65 * (prices['eth'] - prices['eth'] * 10),
+          Math.round(
+            (ETH_AMOUNT_TEMP * prices['eth'] -
+              ETH_AMOUNT_TEMP * (prices['eth'] - prices['eth'] * 0.1) +
+              Number.EPSILON) *
+              100
+          ) / 100,
         grvtRewards: 33.24,
       },
       {
-        id: 'reth',
-        amount: 2.8,
-        liquidationPrice: prices['reth'] - prices['reth'] * 10,
+        name: 'rETH',
+        amount: RETH_AMOUNT_TEMP,
+        liquidationPrice:
+          Math.round(
+            (prices['reth'] - prices['reth'] * 0.1 + Number.EPSILON) * 100
+          ) / 100,
         marketPrice: prices['reth'],
-        claimValue: 2.8 * prices['reth'],
+        claimValue:
+          Math.round(
+            (RETH_AMOUNT_TEMP * prices['reth'] + Number.EPSILON) * 100
+          ) / 100,
         profitLoss:
-          2.8 * prices['reth'] - 2.8 * (prices['reth'] - prices['reth'] * 10),
+          Math.round(
+            (RETH_AMOUNT_TEMP * prices['reth'] -
+              RETH_AMOUNT_TEMP * (prices['reth'] - prices['reth'] * 0.1) +
+              Number.EPSILON) *
+              100
+          ) / 100,
         grvtRewards: 33.24,
       },
       {
-        id: 'steth',
-        amount: 1.75,
-        liquidationPrice: prices['steth'] - prices['steth'] * 10,
+        name: 'stETH',
+        amount: STETH_AMOUNT_TEMP,
+        liquidationPrice:
+          Math.round(
+            (prices['steth'] - prices['steth'] * 0.1 + Number.EPSILON) * 100
+          ) / 100,
         marketPrice: prices['steth'],
-        claimValue: 1.75 * prices['steth'],
+        claimValue:
+          Math.round(
+            (STETH_AMOUNT_TEMP * prices['steth'] + Number.EPSILON) * 100
+          ) / 100,
         profitLoss:
-          1.75 * prices['steth'] -
-          1.75 * (prices['steth'] - prices['steth'] * 10),
+          Math.round(
+            (STETH_AMOUNT_TEMP * prices['steth'] -
+              STETH_AMOUNT_TEMP * (prices['steth'] - prices['steth'] * 0.1) +
+              Number.EPSILON) *
+              100
+          ) / 100,
         grvtRewards: 33.24,
       },
     ],
@@ -117,7 +152,7 @@ function Pool(): JSX.Element {
         >
           {isSmallRes && (
             <Tab
-              minWidth={[{ base: '0', md: '200px' }]}
+              minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
               borderBottomWidth="3px"
               fontWeight="medium"
             >
@@ -125,21 +160,21 @@ function Pool(): JSX.Element {
             </Tab>
           )}
           <Tab
-            minWidth={[{ base: '0', md: '200px' }]}
+            minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
             Deposit
           </Tab>
           <Tab
-            minWidth={[{ base: '0', md: '200px' }]}
+            minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
             Withdraw
           </Tab>
           <Tab
-            minWidth={[{ base: '0', md: '200px' }]}
+            minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
@@ -170,7 +205,7 @@ function Pool(): JSX.Element {
             <PoolWithdraw totalDeposit={totalDeposit} poolTvl={poolTvl} />
           </TabPanel>
           <TabPanel padding="0">
-            <p>Claim</p>
+            <PoolClaim claimableAssets={claimableAssets} />
           </TabPanel>
         </TabPanels>
       </Tabs>

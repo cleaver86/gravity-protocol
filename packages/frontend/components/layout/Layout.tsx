@@ -69,6 +69,12 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
               overflow="scroll"
               position="relative"
               zIndex={50}
+              sx={{
+                '::-webkit-scrollbar': {
+                  display: 'none',
+                },
+                scrollBarWidth: 'none',
+              }}
             >
               <MainNavProvider
                 toggleMainNav={() => {

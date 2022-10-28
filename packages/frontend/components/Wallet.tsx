@@ -21,6 +21,7 @@ import {
 import { shortenAddress } from '@usedapp/core'
 import { WalletContext } from '../providers/WalletProvider'
 import currency from 'currency.js'
+import { getFormattedCurrency } from '../utils/currency'
 import Link from './Link'
 import Label from './Label'
 import GrvtTokenIcon from '../public/images/token-grvt.svg'
@@ -44,20 +45,20 @@ const Token = ({ label, icon, balance, usd }) => {
         <Box>
           <Flex alignItems="baseLine">
             <Text fontSize="md" fontWeight="medium">
-              {currency(balance).format({ symbol: '' })}
+              {getFormattedCurrency(balance, 6)}
             </Text>
             <Text fontSize="sm" fontWeight="medium" marginLeft="5px">
               {label}
             </Text>
           </Flex>
           <Text fontSize="sm" color="gray.300">
-            {currency(balance * usd).format()}
+            {getFormattedCurrency(balance * usd)}
           </Text>
         </Box>
         <Spacer />
         <Box textAlign="right">
           <Text fontSize="sm" color="gray.300">
-            {currency(usd).format()}
+            {getFormattedCurrency(usd)}
           </Text>
           <Link
             href={`https://curve.fi/${label.toLowerCase()}`}
