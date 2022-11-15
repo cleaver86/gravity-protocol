@@ -1,5 +1,7 @@
 import { ethers } from 'ethers'
 import currency from 'currency.js'
+import { TOKENS } from '../constants'
+import { TokenMonetaryValues } from '../types'
 
 const RPC_MAINNET = 'https://rpc.ankr.com/eth'
 const CHAINLINK_ETH_USD_ADDRESS = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'
@@ -102,4 +104,10 @@ export async function getRethUsdPrice() {
   const json = await value.json()
 
   return json['rocket-pool-eth'].usd
+}
+
+export function getDefaultTokenValues() : TokenMonetaryValues {
+  return Object.keys(TOKENS).reduce((values, key) => { 
+    values[key as keyof TokenMonetaryValues] = 0; return values 
+  }, {} as TokenMonetaryValues);
 }

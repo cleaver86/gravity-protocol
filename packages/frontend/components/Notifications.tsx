@@ -6,8 +6,13 @@ import {
   Box,
 } from '@chakra-ui/react'
 
+type TransactionTitles = {
+  transactionStarted: string
+  transactionSucceed: string
+}
+
 // Title text for the various transaction notifications.
-const TRANSACTION_TITLES = {
+const TRANSACTION_TITLES: TransactionTitles = {
   transactionStarted: 'Local Transaction Started',
   transactionSucceed: 'Local Transaction Completed',
 }
@@ -17,37 +22,51 @@ function truncateHash(hash: string, length = 38): string {
   return hash.replace(hash.substring(4, length), '...')
 }
 
+type Notification = {
+  id: string
+  type: string
+  transaction?: {
+    hash: string
+  }
+}
+
+type Props = {
+  notifications: Notification[]
+}
+
 /**
  * Component
  */
-function Notifications(notifications): JSX.Element {
+function Notifications({ notifications = [] }: Props): JSX.Element {
   return (
     <>
-      {notifications.length &&
-        notifications.map((notification) => {
-          if (notification.type === 'walletConnected') {
-            return null
-          }
-          return (
-            <Alert
-              key={notification.id}
-              status="success"
-              position="fixed"
-              bottom="8"
-              right="8"
-              width="400px"
-            >
-              <AlertIcon />
-              <Box>
-                <AlertTitle>{TRANSACTION_TITLES[notification.type]}</AlertTitle>
+      {notifications.map(({ id, type, transaction }: Notification) => {
+        if (type === 'walletConnected') {
+          return null
+        }
+        return (
+          <Alert
+            key={id}
+            status="success"
+            position="fixed"
+            bottom="8"
+            right="8"
+            width="400px"
+          >
+            <AlertIcon />
+            <Box>
+              <AlertTitle>
+                {TRANSACTION_TITLES[type as keyof TransactionTitles]}
+              </AlertTitle>
+              {transaction && (
                 <AlertDescription overflow="hidden">
-                  Transaction Hash:{' '}
-                  {truncateHash(notification.transaction.hash, 61)}
+                  Transaction Hash: {truncateHash(transaction.hash, 61)}
                 </AlertDescription>
-              </Box>
-            </Alert>
-          )
-        })}
+              )}
+            </Box>
+          </Alert>
+        )
+      })}
     </>
   )
 }

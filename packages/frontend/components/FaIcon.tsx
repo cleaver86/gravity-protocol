@@ -1,17 +1,20 @@
 import { chakra } from '@chakra-ui/react'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-//import { faChevronDown } from '@fortawesome/free-regular-svg-icons'
-//import { faChevronDown } from '@fortawesome/pro-regular-svg-icons'
+
+type Props = {
+  icon: IconDefinition
+  height?: string
+  color?: string
+  _groupHover?: object
+}
 
 const FaIcon = ({
   icon,
-  height,
-  color,
+  height = '15px',
+  color = 'gray.200',
   _groupHover,
-}: {
-  icon: IconDefinition
-}) => {
+}: Props): JSX.Element => {
   const Icon = chakra(FontAwesomeIcon)
 
   return (
@@ -23,10 +26,6 @@ const FaIcon = ({
       _groupHover={_groupHover}
     />
   )
-}
-
-FaIcon.defaultProps = {
-  color: 'gray.200',
 }
 
 export default FaIcon

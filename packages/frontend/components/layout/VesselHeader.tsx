@@ -7,17 +7,24 @@ import {
   Text,
   useMediaQuery,
 } from '@chakra-ui/react'
-import currency from 'currency.js'
+import { Vessel } from '../../types'
 import Label from '../Label'
 import MonetaryText from '../MonetaryText'
-import RatioChart from '../RatioChart'
+import RatioChart, { RatioChartProps } from '../RatioChart'
 import RatioCard from '../RatioCard'
 import LoanValueChart from '../LoanValueChart'
 import Status from '../Status'
 import { getPersonalLtvColor, getSystemLtvColor } from '../../utils/general'
 
-const getPositionRatioChartData = (walletBalance, collateral, debt) => {
+const getPositionRatioChartData = (
+  walletBalance: number,
+  collateral: Vessel['collateral'],
+  debt: Vessel['debt']
+): RatioChartProps['datasets'] => {
   const total = walletBalance + collateral + debt
+  const walletPercent = walletBalance / total
+  const collateralPercent = collateral / total
+  const debtPercent = debt / total
   const roundedLeft = {
     topLeft: 100,
     bottomLeft: 100,
@@ -29,7 +36,6 @@ const getPositionRatioChartData = (walletBalance, collateral, debt) => {
 
   return [
     {
-      id: 'empty',
       data: total === 0 ? [100] : [0],
       backgroundColor: '#412C64',
       borderWidth: 0,
@@ -40,8 +46,7 @@ const getPositionRatioChartData = (walletBalance, collateral, debt) => {
       borderSkipped: false,
     },
     {
-      id: 'walletBalance',
-      data: walletBalance ? [walletBalance / total] : [0],
+      data: walletPercent > 0.005 ? [walletPercent] : [0],
       backgroundColor: '#D079FF',
       borderWidth: 0,
       borderRadius:
@@ -56,18 +61,19 @@ const getPositionRatioChartData = (walletBalance, collateral, debt) => {
       borderSkipped: false,
     },
     {
-      id: 'collateral',
-      data: collateral ? [collateral / total] : [0],
+      data: collateralPercent > 0.005 ? [collateralPercent] : [0],
       backgroundColor: '#19F785',
       borderWidth: 0,
-      borderRadius: walletBalance <= 0 && {
-        ...roundedLeft,
-      },
+      borderRadius:
+        walletPercent < 0.005
+          ? {
+              ...roundedLeft,
+            }
+          : {},
       borderSkipped: false,
     },
     {
-      id: 'debt',
-      data: debt ? [debt / total] : [0],
+      data: debtPercent > 0.005 ? [debtPercent] : [0],
       backgroundColor: '#F7AB19',
       borderWidth: 0,
       borderRadius: {
@@ -78,10 +84,22 @@ const getPositionRatioChartData = (walletBalance, collateral, debt) => {
   ]
 }
 
-const Position = ({ available, walletBalance, collateral, debt }) => {
+type PositionProps = {
+  walletBalance: number
+  available: Vessel['available']
+  collateral: Vessel['collateral']
+  debt: Vessel['debt']
+}
+
+const Position = ({
+  available,
+  walletBalance,
+  collateral,
+  debt,
+}: PositionProps) => {
   return (
     <>
-      <Box marginBottom={[{ base: '20px', md: '55px' }]}>
+      <Box marginBottom={{ base: '20px', md: '55px' }}>
         <Label>Available to Borrow</Label>
         <MonetaryText currency="VUSD" fontSize="4xl">
           {available}
@@ -94,56 +112,69 @@ const Position = ({ available, walletBalance, collateral, debt }) => {
       </Box>
       <HStack spacing="3" overflowX="scroll" paddingBottom="10px">
         <RatioCard currency="USD" label={`Wallet`} color="purple.300">
-          {currency(walletBalance).format()}
+          {walletBalance}
         </RatioCard>
         <RatioCard currency="USD" label={`Collateral`} color="green">
-          {currency(collateral).format()}
+          {collateral}
         </RatioCard>
         <RatioCard currency="USD" label={`Debt`} color="orange">
-          {currency(debt).format()}
+          {debt}
         </RatioCard>
       </HStack>
     </>
   )
 }
 
+type LiquidationInfoProps = {
+  systemStatus: Vessel['systemStatus']
+  redemptionQueue: Vessel['redemptionQueue']
+  liquidationPrice: Vessel['liquidationPrice']
+}
+
 const LiquidationInfo = ({
   systemStatus,
   redemptionQueue,
   liquidationPrice,
-}) => (
+}: LiquidationInfoProps) => (
   <Box minWidth="170px">
     <Box marginBottom="33px">
-      <Label info>System Status</Label>
+      <Label tooltip="TOOL_TIP">System Status</Label>
       <Status type={systemStatus} />
     </Box>
     <Box marginBottom="30px">
-      <Label info>Redemption Queue</Label>
-      {(redemptionQueue > 0 && (
+      <Label tooltip="TOOL_TIP">Redemption Queue</Label>
+      {(redemptionQueue && redemptionQueue > 0 && (
         <MonetaryText currency="USD" fontSize="lg">
-          {currency(redemptionQueue).format()}
+          {redemptionQueue}
         </MonetaryText>
       )) || <Text color="gray.300">---</Text>}
     </Box>
     <Box marginBottom="30px">
-      <Label info>Liquidation Price</Label>
-      {(liquidationPrice > 0 && (
+      <Label tooltip="TOOL_TIP">Liquidation Price</Label>
+      {(liquidationPrice && liquidationPrice > 0 && (
         <MonetaryText currency="USD" fontSize="lg">
-          {currency(liquidationPrice).format()}
+          {liquidationPrice}
         </MonetaryText>
       )) || <Text color="gray.300">---</Text>}
     </Box>
   </Box>
 )
 
+type LoanToValueInfoProps = {
+  systemLtv: Vessel['systemLtv']
+  personalLtv: Vessel['personalLtv']
+  maxSystemLtv: Vessel['maxSystemLtv']
+  maxPersonalLtv: Vessel['maxPersonalLtv']
+}
+
 const LoanToValueInfo = ({
   systemLtv,
   personalLtv,
   maxSystemLtv,
   maxPersonalLtv,
-}) => (
+}: LoanToValueInfoProps) => (
   <Box marginLeft="auto">
-    <Label align="center" marginBottom="5px" info>
+    <Label justifyContent="center" marginBottom="5px" tooltip="TOOL_TIP">
       Loan-to-Value
     </Label>
     <Flex alignItems="baseline" justifyContent="center">
@@ -170,14 +201,14 @@ const LoanToValueInfo = ({
     </Flex>
     <Box marginTop="25px" maxHeight="180">
       <LoanValueChart
-        ltvData={personalLtv}
-        maxLtv={maxPersonalLtv}
+        personalLtv={personalLtv || 0}
+        maxPersonalLtv={maxPersonalLtv}
         systemLtv={systemLtv}
       />
     </Box>
     <Box marginTop="-100px" textAlign="center">
       <Text>Personal</Text>
-      {(personalLtv > 0 && (
+      {(personalLtv && personalLtv > 0 && (
         <Flex direction="column" alignItems="center" justifyContent="center">
           <Text
             fontSize="2xl"
@@ -199,15 +230,22 @@ const LoanToValueInfo = ({
   </Box>
 )
 
+type LoanToValueInfoMobileProps = {
+  systemLtv: Vessel['systemLtv']
+  personalLtv: Vessel['personalLtv']
+  maxSystemLtv: Vessel['maxSystemLtv']
+  maxPersonalLtv: Vessel['maxPersonalLtv']
+}
+
 const LoanToValueInfoMobile = ({
   systemLtv,
   personalLtv,
   maxSystemLtv,
   maxPersonalLtv,
-}) => (
+}: LoanToValueInfoMobileProps) => (
   <Box>
     <Box marginBottom="30px">
-      <Label info>System LTV</Label>
+      <Label tooltip="TOOL_TIP">System LTV</Label>
       {(systemLtv > 0 && (
         <Flex alignItems="baseline">
           <Text
@@ -224,8 +262,8 @@ const LoanToValueInfoMobile = ({
       )) || <Text color="gray.300">---</Text>}
     </Box>
     <Box marginBottom="30px">
-      <Label info>Personal LTV</Label>
-      {(personalLtv > 0 && (
+      <Label tooltip="TOOL_TIP">Personal LTV</Label>
+      {(personalLtv && personalLtv > 0 && (
         <Flex alignItems="baseline">
           <Text
             fontSize="2xl"
@@ -243,6 +281,10 @@ const LoanToValueInfoMobile = ({
   </Box>
 )
 
+type VesselHeaderProps = Vessel & {
+  walletBalance: number
+}
+
 /**
  * Component
  */
@@ -258,7 +300,7 @@ function VesselHeader({
   personalLtv,
   maxSystemLtv,
   maxPersonalLtv,
-}): JSX.Element {
+}: VesselHeaderProps): JSX.Element {
   const [isMobileRes] = useMediaQuery('(max-width: 767px)')
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
 

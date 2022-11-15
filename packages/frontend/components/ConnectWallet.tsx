@@ -2,8 +2,18 @@ import { Button, Flex, Image } from '@chakra-ui/react'
 import { useEthers } from '@usedapp/core'
 import React from 'react'
 import { walletconnect, walletlink } from '../lib/connectors'
+import {
+  WALLET_PROVIDER_METAMASK,
+  WALLET_PROVIDER_COINBASE,
+  WALLET_PROVIDER_WALLETCONNECT,
+} from '../constants'
+import { WalletProvider } from '../types'
 
-function ConnectWallet({ onConnect }): JSX.Element {
+type Props = {
+  onConnect: (arg0: WalletProvider['name']) => void
+}
+
+function ConnectWallet({ onConnect }: Props): JSX.Element {
   const { activate, activateBrowserWallet } = useEthers()
 
   return (
@@ -29,7 +39,7 @@ function ConnectWallet({ onConnect }): JSX.Element {
         }
         onClick={() => {
           activateBrowserWallet()
-          onConnect('metaMask')
+          onConnect(WALLET_PROVIDER_METAMASK)
         }}
       >
         MetaMask
@@ -49,7 +59,7 @@ function ConnectWallet({ onConnect }): JSX.Element {
         }
         onClick={() => {
           activate(walletconnect)
-          onConnect('walletConnect')
+          onConnect(WALLET_PROVIDER_WALLETCONNECT)
         }}
       >
         WalletConnect
@@ -69,7 +79,7 @@ function ConnectWallet({ onConnect }): JSX.Element {
         }
         onClick={() => {
           activate(walletlink)
-          onConnect('coinbase')
+          onConnect(WALLET_PROVIDER_COINBASE)
         }}
       >
         Coinbase Wallet

@@ -1,10 +1,12 @@
-import { Box, Flex, Heading, Text, Spacer } from '@chakra-ui/react'
+import { Box, Flex, Text, Spacer } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import { Vessel } from '../types'
 import Label from './Label'
 import MonetaryText from './MonetaryText'
 import Status from './Status'
+import TokenHeading from './TokenHeading'
 
-const getLtvColor = (ltv) => {
+const getLtvColor = (ltv: number): string => {
   if (ltv < 30) {
     return 'green'
   } else if (ltv < 60) {
@@ -17,41 +19,37 @@ const getLtvColor = (ltv) => {
 }
 
 const Vessel = ({
-  name,
-  icon,
+  id,
+  display,
   available,
   debt,
   systemLtv,
+  systemStatus,
   personalLtv,
-  oneTimeFee,
-  maxLtv,
-}) => {
+  fee,
+  maxPersonalLtv,
+}: Vessel) => {
   return (
-    <NextLink href={`borrow/${name.toLowerCase()}`}>
+    <NextLink href={`borrow/${id}`}>
       <Box
         backgroundColor="purple.700"
         border="1px solid"
         borderColor="gray.500"
         borderRadius="5px"
-        minWidth={[{ base: 'none', md: '500px' }]}
+        minWidth={{ base: 'none', md: '500px' }}
         _hover={{
           border: '1px solid',
           borderColor: 'gray.300',
           cursor: 'pointer',
         }}
       >
-        <Box
-          padding={[{ base: '20px 20px', md: '20px 30px' }]}
-          minHeight="280px"
-        >
+        <Box padding={{ base: '20px 20px', md: '20px 30px' }} minHeight="280px">
           <Flex alignItems="flex-end" marginBottom="40px">
-            {icon}
-            <Heading fontSize="2xl" fontWeight="medium" marginLeft="10px">
-              {name.toUpperCase()} Vessel
-            </Heading>
-
+            <TokenHeading id={id} paddingLeft="15px">
+              {display} Vessel
+            </TokenHeading>
             <Spacer />
-            {systemLtv > 65 && <Status type="recovery" />}
+            <Status type={systemStatus} />
           </Flex>
           <Flex>
             <Flex direction="column" w="60%">
@@ -61,7 +59,7 @@ const Vessel = ({
                   {available}
                 </MonetaryText>
               </Box>
-              {debt && (
+              {debt > 0 && (
                 <Box marginBottom="20px">
                   <Label>Debt</Label>
                   <MonetaryText currency="VUSD" fontSize="xl">
@@ -72,7 +70,7 @@ const Vessel = ({
             </Flex>
             <Flex direction="column" w="40%">
               <Box marginBottom="20px">
-                <Label info>System LTV</Label>
+                <Label tooltip="TOOL_TIP">System LTV</Label>
                 <Text
                   fontSize="xl"
                   fontWeight="medium"
@@ -83,7 +81,7 @@ const Vessel = ({
               </Box>
               {personalLtv && (
                 <Box marginBottom="20px">
-                  <Label info>Personal LTV</Label>
+                  <Label tooltip="TOOL_TIP">Personal LTV</Label>
                   <Text
                     fontSize="xl"
                     fontWeight="medium"
@@ -97,7 +95,7 @@ const Vessel = ({
           </Flex>
         </Box>
         <Box
-          padding={[{ base: '20px 20px', md: '20px 30px' }]}
+          padding={{ base: '20px 20px', md: '20px 30px' }}
           backgroundColor="purple.800"
           borderTop="1px solid"
           borderColor="gray.500"
@@ -105,19 +103,19 @@ const Vessel = ({
         >
           <Flex>
             <Flex w="60%" alignItems="flex-end">
-              <Label orientation="horizontal" info>
+              <Label marginRight="10px" marginBottom="0" tooltip="TOOL_TIP">
                 One-Time Fee
               </Label>
               <Text fontWeight="medium" color="gray.100">
-                {oneTimeFee.toFixed(2)}%
+                {fee.toFixed(2)}%
               </Text>
             </Flex>
             <Flex w="40%" alignItems="flex-end">
-              <Label orientation="horizontal" info>
+              <Label marginRight="10px" marginBottom="0" tooltip="TOOL_TIP">
                 Max LTV
               </Label>
               <Text fontWeight="medium" color="gray.100">
-                {maxLtv.toFixed(2)}%
+                {maxPersonalLtv.toFixed(2)}%
               </Text>
             </Flex>
           </Flex>

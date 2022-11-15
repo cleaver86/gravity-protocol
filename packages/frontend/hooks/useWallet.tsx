@@ -1,53 +1,72 @@
 import { useEffect, useState } from 'react'
 import { useEtherBalance, useTokenBalance } from '@usedapp/core'
-import { BigNumber, utils } from 'ethers'
+import { BigNumber, BigNumberish, utils } from 'ethers'
 import currency from 'currency.js'
+import { TokenMonetaryValues } from '../types'
+import {
+  CURRENCY_USD,
+  TOKENS,
+  TOKEN_ADDRESS_GRVT,
+  TOKEN_ADDRESS_RETH,
+  TOKEN_ADDRESS_STETH,
+  TOKEN_ADDRESS_VUSD,
+} from '../constants'
 import useInterval from './useInterval'
 import {
   getEthUsdPrice,
   getStethEthPrice,
   getRethUsdPrice,
-} from '../utils/fetchPrices'
+  getDefaultTokenValues,
+} from '../utils/prices'
 
-export const CURRENCY_USD = 'usd'
-export const CURRENCY_ETH = 'eth'
-export const CURRENCY_GRVT = 'grvt'
-export const CURRENCY_VUSD = 'vusd'
-export const CURRENCY_RETH = 'reth'
-export const CURRENCY_STETH = 'steth'
-export const TOKEN_ADDRESS_GRVT = 'TEMP_GRVT_ADDRESS'
-export const TOKEN_ADDRESS_VUSD = 'TEMP_VUSD_ADDRESS'
-export const TOKEN_ADDRESS_RETH = '0xae78736cd615f374d3085123a210448e74fc6393'
-export const TOKEN_ADDRESS_STETH = '0xae7ab96520de3a18e5e111b5eaab095312d7fe84'
+type Token = {
+  name: string
+  priceCurrency:
+    | typeof TOKENS.eth
+    | typeof TOKENS.grvt
+    | typeof TOKENS.vusd
+    | typeof TOKENS.reth
+    | typeof TOKENS.steth
+  precision: number
+  getPrice: () => Promise<number>
+}
+
+type EthToken = Token & {
+  useBalance: (account: string) => BigNumberish
+}
 
 const ethToken = {
-  name: CURRENCY_ETH,
-  address: null,
+  name: TOKENS.eth,
   priceCurrency: CURRENCY_USD,
   precision: 6,
-  useBalance: () => BigNumber.from('0x2214622D372367546'), //useEtherBalance,
+  useBalance: useEtherBalance, //BigNumber.from('0x2214622D372367546'),
   getPrice: getEthUsdPrice,
+} as EthToken
+
+type Erc20Token = Token & {
+  address: string
+  useBalance: (address: string, account: string) => BigNumberish
 }
 
 const erc20Tokens = [
   {
-    name: CURRENCY_GRVT,
+    name: TOKENS.grvt,
     address: TOKEN_ADDRESS_GRVT,
     priceCurrency: CURRENCY_USD,
     precision: 6,
-    useBalance: () => BigNumber.from('0x3019682D372367546'),
+    useBalance: () => BigNumber.from('0x00'), //BigNumber.from('0x3019682D372367546')
     getPrice: () => 35.0,
   },
   {
-    name: CURRENCY_VUSD,
+    name: TOKENS.vusd,
     address: TOKEN_ADDRESS_VUSD,
     priceCurrency: CURRENCY_USD,
     precision: 2,
-    useBalance: () => BigNumber.from('0x194672999D372367546'),
+    useBalance: () => BigNumber.from('0x00'), //BigNumber.from('0x194672999D372367546')
     getPrice: () => 1.0,
   },
   {
-    name: CURRENCY_RETH,
+    name: TOKENS.reth,
     address: TOKEN_ADDRESS_RETH,
     priceCurrency: CURRENCY_USD,
     precision: 6,
@@ -55,28 +74,16 @@ const erc20Tokens = [
     getPrice: getRethUsdPrice,
   },
   {
-    name: CURRENCY_STETH,
+    name: TOKENS.steth,
     address: TOKEN_ADDRESS_STETH,
-    priceCurrency: CURRENCY_ETH,
+    priceCurrency: TOKENS.eth,
     precision: 6,
     useBalance: useTokenBalance,
     getPrice: getStethEthPrice,
   },
-]
+] as Erc20Token[]
 
-const getDefaultPrices = () => {
-  return (
-    erc20Tokens.reduce((r, { name }) => {
-      r[name] = 0
-      return r
-    }),
-    {
-      [CURRENCY_ETH]: 0,
-    }
-  )
-}
-
-const getBalances = (account) => {
+const getBalances = (account: string): TokenMonetaryValues => {
   const ethBalance = ethToken.useBalance(account)
   const formattedEthBalance = ethBalance
     ? currency(utils.formatEther(ethBalance), { precision: ethToken.precision })
@@ -84,53 +91,55 @@ const getBalances = (account) => {
     : 0
 
   return erc20Tokens.reduce(
-    (r, { name, address, precision, useBalance }) => {
+    (r, { name, address, precision, useBalance }: Erc20Token) => {
       const balance = useBalance(address, account)
-      r[name] = balance
+      r[name as keyof TokenMonetaryValues] = balance
         ? currency(utils.formatEther(balance), { precision: precision || 6 })
             .value
         : 0
       return r
     },
     {
-      [CURRENCY_ETH]: formattedEthBalance,
-    }
+      [TOKENS.eth]: formattedEthBalance,
+    } as TokenMonetaryValues
   )
 }
 
-const useWallet = (account) => {
-  const [prices, setPrices] = useState(getDefaultPrices)
+const useWallet = (account: string) => {
+  const [prices, setPrices] = useState<TokenMonetaryValues>(
+    getDefaultTokenValues
+  )
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const balances = getBalances(account)
-
   const getPricesAndTotal = async () => {
     setLoading(true)
 
     const ethUsdPrice = await ethToken.getPrice()
-    let total = ethUsdPrice * balances[CURRENCY_ETH]
+    let total = ethUsdPrice * balances[TOKENS.eth as keyof TokenMonetaryValues]
     const erc20TokenPrices = await Promise.all(
       erc20Tokens.map(async ({ name, getPrice, priceCurrency }) => {
         let price = await getPrice()
 
         // Convert prices in ETH to USD (eg. stETH)
-        if (priceCurrency === CURRENCY_ETH) {
+        if (priceCurrency === TOKENS.eth) {
           price = currency(ethUsdPrice * price).value
         }
 
-        total += balances[name] * price
+        total += balances[name as keyof TokenMonetaryValues] * price
 
         return { name, price }
       })
     )
+
     const prices = erc20TokenPrices.reduce(
-      (r, { name, price }) => {
-        r[name] = price
+      (r: TokenMonetaryValues, { name, price }): TokenMonetaryValues => {
+        r[name as keyof TokenMonetaryValues] = price
         return r
       },
       {
-        [CURRENCY_ETH]: ethUsdPrice,
-      }
+        [TOKENS.eth]: ethUsdPrice,
+      } as TokenMonetaryValues
     )
 
     setPrices(prices)

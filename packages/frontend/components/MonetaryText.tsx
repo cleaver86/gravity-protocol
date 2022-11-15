@@ -1,34 +1,34 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, FlexProps, Text, TextProps } from '@chakra-ui/react'
 import currencyJs from 'currency.js'
+
+type Props = TextProps & {
+  children: number
+  currency?: string
+  showCurrency?: boolean
+  flexProps?: FlexProps
+}
 
 const MonetaryText = ({
   children,
   currency,
-  fontSize,
-  align,
-  showCurrency,
-  color,
+  showCurrency = true,
+  flexProps = {},
   ...rest
-}) => {
+}: Props) => {
   const symbol = currency && currency.toLowerCase() === 'usd' ? '$' : ''
 
   return (
-    <Flex alignItems="baseline" justifyContent={align}>
-      <Text fontSize={fontSize} fontWeight="medium" color={color} {...rest}>
+    <Flex alignItems="baseline" {...flexProps}>
+      <Text fontWeight="medium" {...rest}>
         {currencyJs(children).format({ symbol })}
       </Text>
       {showCurrency && currency && (
-        <Text fontSize="sm" marginLeft="5px" color={color}>
+        <Text fontSize="sm" marginLeft="5px">
           {currency}
         </Text>
       )}
     </Flex>
   )
-}
-
-MonetaryText.defaultProps = {
-  showCurrency: true,
-  color: null,
 }
 
 export default MonetaryText

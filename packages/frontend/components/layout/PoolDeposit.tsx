@@ -5,16 +5,31 @@ import CurrencyInput from '../CurrencyInput'
 import Summary from '../Summary'
 import Alert from '../Alert'
 import { getCurrency, getFormattedCurrency } from '../../utils/currency'
+import { values } from 'lodash'
+
+type Props = {
+  vusdBalance: number
+  totalDeposit: number
+  poolTvl: number
+}
+
+type FormData = {
+  depositedAmount: null | number
+}
 
 /**
  * Component
  */
-function PoolDeposit({ vusdBalance, totalDeposit, poolTvl }): JSX.Element {
+function PoolDeposit({
+  vusdBalance,
+  totalDeposit,
+  poolTvl,
+}: Props): JSX.Element {
   const [availableVusd, setAvailableVusd] = useState(vusdBalance)
-  const { control, handleSubmit, setValue, watch } = useForm({
+  const { control, handleSubmit, setValue, watch } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
-      depositedAmount: '',
+      depositedAmount: null,
     },
   })
   const depositedAmount = watch('depositedAmount', 0)
@@ -34,8 +49,8 @@ function PoolDeposit({ vusdBalance, totalDeposit, poolTvl }): JSX.Element {
   return (
     <SimpleGrid
       columns={{ sm: 1, lg: 2 }}
-      spacing={[{ base: 10, '2xl': 20 }]}
-      gridGap={[{ base: 'none', lg: '2.5rem' }]}
+      spacing={{ base: 10, '2xl': 20 }}
+      gridGap={{ base: 'none', lg: '2.5rem' }}
       marginBottom="90px"
     >
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -45,31 +60,27 @@ function PoolDeposit({ vusdBalance, totalDeposit, poolTvl }): JSX.Element {
           render={({ field: { onChange, ...rest } }) => (
             <FormControl marginBottom="50px">
               <CurrencyInput
+                name="depositedAmount"
                 currency="VUSD"
                 label="Amount"
                 decimals={2}
                 available={getFormattedCurrency(availableVusd, 2)}
-                isAllowed={(values) => {
-                  const { value } = values
-
-                  return value <= vusdBalance
+                isAllowed={(value) => {
+                  return value == null || value <= vusdBalance
                 }}
-                onValueChange={(values) => {
-                  onChange(values.floatValue)
-                }}
+                onValueChange={onChange}
                 onClickPercentage={(percentage) => {
                   onChange(getCurrency(vusdBalance * percentage))
                 }}
-                {...rest}
               />
             </FormControl>
           )}
         />
       </form>
       <Box>
-        {(!depositedAmount && (
+        {depositedAmount == null ? (
           <Alert status="info">Deposit VUSD to begin purchasing assets</Alert>
-        )) || (
+        ) : (
           <Summary
             items={[
               {

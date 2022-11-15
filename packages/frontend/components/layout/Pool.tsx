@@ -23,8 +23,15 @@ import { faScaleBalanced, faBars } from '@fortawesome/pro-regular-svg-icons'
  * Component
  */
 function Pool(): JSX.Element {
-  const { toggleMainNav } = useContext(MainNavContext)
-  const { balances, prices } = useContext(WalletContext)
+  const mainNavContext = useContext(MainNavContext)
+  const walletContext = useContext(WalletContext)
+
+  // TODO Get rid of this
+  if (!walletContext) {
+    return <></>
+  }
+
+  const { balances, prices } = walletContext
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
   const ETH_AMOUNT_TEMP = 1.65
   const RETH_AMOUNT_TEMP = 2.8
@@ -46,6 +53,7 @@ function Pool(): JSX.Element {
     grvtRewards: 159.56,
     claimableAssets: [
       {
+        id: 'eth',
         name: 'ETH',
         amount: ETH_AMOUNT_TEMP,
         liquidationPrice:
@@ -66,6 +74,7 @@ function Pool(): JSX.Element {
         grvtRewards: 33.24,
       },
       {
+        id: 'reth',
         name: 'rETH',
         amount: RETH_AMOUNT_TEMP,
         liquidationPrice:
@@ -87,6 +96,7 @@ function Pool(): JSX.Element {
         grvtRewards: 33.24,
       },
       {
+        id: 'steth',
         name: 'stETH',
         amount: STETH_AMOUNT_TEMP,
         liquidationPrice:
@@ -112,17 +122,18 @@ function Pool(): JSX.Element {
 
   return (
     <>
-      <Flex paddingBottom={[{ base: '40px', lg: '80px' }]}>
-        <Flex w="20%" display={[{ base: 'flex', xl: 'none' }]}>
+      <Flex paddingBottom={{ base: '40px', lg: '80px' }}>
+        <Flex w="20%" display={{ base: 'flex', xl: 'none' }}>
           <IconButton
             variant="unstyled"
             icon={<FaIcon height="24px" icon={faBars} />}
+            aria-label="toggle-main-nav"
             onClick={() => {
-              toggleMainNav()
+              mainNavContext && mainNavContext.toggleMainNav()
             }}
           />
         </Flex>
-        <Flex w="100%" justifyContent={[{ base: 'center', xl: 'flex-start' }]}>
+        <Flex w="100%" justifyContent={{ base: 'center', xl: 'flex-start' }}>
           <IconHeading
             icon={faScaleBalanced}
             justifyContent="center"
@@ -152,7 +163,7 @@ function Pool(): JSX.Element {
         >
           {isSmallRes && (
             <Tab
-              minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
+              minWidth={{ base: '0', md: '150px', lg: '200px' }}
               borderBottomWidth="3px"
               fontWeight="medium"
             >
@@ -160,21 +171,21 @@ function Pool(): JSX.Element {
             </Tab>
           )}
           <Tab
-            minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
+            minWidth={{ base: '0', md: '150px', lg: '200px' }}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
             Deposit
           </Tab>
           <Tab
-            minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
+            minWidth={{ base: '0', md: '150px', lg: '200px' }}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
             Withdraw
           </Tab>
           <Tab
-            minWidth={[{ base: '0', md: '150px', lg: '200px' }]}
+            minWidth={{ base: '0', md: '150px', lg: '200px' }}
             borderBottomWidth="3px"
             fontWeight="medium"
           >

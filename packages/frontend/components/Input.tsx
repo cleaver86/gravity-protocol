@@ -1,9 +1,9 @@
-import { Input as ChakraInput } from '@chakra-ui/react'
+import { Input as ChakraInput, InputProps } from '@chakra-ui/react'
 
 /**
  * Component
  */
-function Input(props): JSX.Element {
+const Input = (props: InputProps): JSX.Element => {
   return (
     <ChakraInput
       fontWeight="medium"

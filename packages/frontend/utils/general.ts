@@ -1,4 +1,4 @@
-export const getPersonalLtvColor = (ltv, recoveryMode = false) => {
+export const getPersonalLtvColor = (ltv:number, recoveryMode = false) => {
   if (recoveryMode) {
     if (ltv < 40) {
       return '#19F785'
@@ -18,7 +18,7 @@ export const getPersonalLtvColor = (ltv, recoveryMode = false) => {
   }
 }
 
-export const getSystemLtvColor = (ltv) => {
+export const getSystemLtvColor = (ltv:number) => {
   if (ltv < 50) {
     return '#19F785'
   } else if (ltv < 60) {

@@ -1,13 +1,20 @@
+import PropTypes from 'prop-types'
 import { Image } from '@chakra-ui/react'
+import {
+  WALLET_PROVIDER_METAMASK,
+  WALLET_PROVIDER_COINBASE,
+  WALLET_PROVIDER_WALLETCONNECT,
+} from '../constants'
+import { WalletProvider } from '../types'
 
 /**
  * Component
  */
-function WalletIcon({ name }): JSX.Element {
+const WalletIcon = ({ name }: WalletProvider): JSX.Element => {
   const iconSrc = {
-    metaMask: '/images/logo-metamask.png',
-    coinbase: '/images/logo-coinbase.png',
-    walletConnect: '/images/logo-walletconnect.svg',
+    [WALLET_PROVIDER_METAMASK]: '/images/logo-metamask.png',
+    [WALLET_PROVIDER_COINBASE]: '/images/logo-coinbase.png',
+    [WALLET_PROVIDER_WALLETCONNECT]: '/images/logo-walletconnect.svg',
   }
 
   return (
@@ -16,7 +23,7 @@ function WalletIcon({ name }): JSX.Element {
       marginTop="-2px"
       marginRight="10px"
       src={iconSrc[name]}
-      alt="MetaMask"
+      alt={name}
     />
   )
 }

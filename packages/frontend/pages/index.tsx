@@ -24,6 +24,8 @@ import {
   faVault,
 } from '@fortawesome/pro-regular-svg-icons'
 import { SimpleGrid } from '@chakra-ui/react'
+import { STATUS_SYSTEM_NORMAL } from '../constants'
+import { Vessel } from '../types'
 import IconHeading from '../components/IconHeading'
 import RatioChart from '../components/RatioChart'
 import RatioCard from '../components/RatioCard'
@@ -32,8 +34,14 @@ import Link from '../components/Link'
 import MonetaryText from '../components/MonetaryText'
 import VesselCard from '../components/VesselCard'
 import FaIcon from '../components/FaIcon'
-import EthTokenIcon from '../public/images/token-eth.svg'
-import RethTokenIcon from '../public/images/token-reth.svg'
+
+type PortfolioProps = {
+  portfolioValue: number
+  totalStaked: number
+  totalClaimable: number
+  totalDeposited: number
+  totalDebt: number
+}
 
 const Portfolio = ({
   portfolioValue,
@@ -41,7 +49,7 @@ const Portfolio = ({
   totalClaimable,
   totalDeposited,
   totalDebt,
-}) => {
+}: PortfolioProps) => {
   const total = totalStaked + totalClaimable + totalDeposited - totalDebt
   const portfolioData = [
     {
@@ -96,7 +104,7 @@ const Portfolio = ({
       <MonetaryText
         currency="USD"
         fontSize="4xl"
-        marginBottom={[{ base: '40px', md: '80px' }]}
+        marginBottom={{ base: '40px', md: '80px' }}
       >
         {portfolioValue}
       </MonetaryText>
@@ -121,7 +129,13 @@ const Portfolio = ({
   )
 }
 
-const StablityPool = ({ pool }) => (
+type PoolProps = {
+  deposited: number
+  claimable: number
+  totalClaimed: number
+}
+
+const StablityPool = ({ deposited, claimable, totalClaimed }: PoolProps) => (
   <Box marginBottom="20px">
     <Flex marginBottom="30px">
       <IconHeading icon={faScaleBalanced} fontSize="xl" margin="0">
@@ -130,7 +144,7 @@ const StablityPool = ({ pool }) => (
       <Spacer />
       <Box>
         <NextLink href="/pool" passHref>
-          <Link>Pool VUSD</Link>
+          <Link as="p">Pool VUSD</Link>
         </NextLink>
       </Box>
     </Flex>
@@ -143,7 +157,7 @@ const StablityPool = ({ pool }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {pool.deposited}
+          {deposited}
         </MonetaryText>
       </Box>
       <Box w="100%">
@@ -154,7 +168,7 @@ const StablityPool = ({ pool }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {pool.claimable}
+          {claimable}
         </MonetaryText>
       </Box>
       <Box w="100%">
@@ -165,14 +179,20 @@ const StablityPool = ({ pool }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {pool.totalClaimed}
+          {totalClaimed}
         </MonetaryText>
       </Box>
     </Flex>
   </Box>
 )
 
-const Staking = ({ staked }) => (
+type StakingProps = {
+  deposited: number
+  claimable: number
+  totalClaimed: number
+}
+
+const Staking = ({ deposited, claimable, totalClaimed }: StakingProps) => (
   <Box>
     <Flex marginBottom="30px">
       <IconHeading icon={faVault} fontSize="xl" margin="0">
@@ -181,7 +201,7 @@ const Staking = ({ staked }) => (
       <Spacer />
       <Box>
         <NextLink href="/pool" passHref>
-          <Link>Stake GRVT</Link>
+          <Link as="p">Stake GRVT</Link>
         </NextLink>
       </Box>
     </Flex>
@@ -194,7 +214,7 @@ const Staking = ({ staked }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {staked.staked}
+          {deposited}
         </MonetaryText>
       </Box>
       <Box w="100%">
@@ -205,7 +225,7 @@ const Staking = ({ staked }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {staked.claimable}
+          {claimable}
         </MonetaryText>
       </Box>
       <Box w="100%">
@@ -216,26 +236,30 @@ const Staking = ({ staked }) => (
           fontSize="lg"
           marginBottom="10px"
         >
-          {staked.totalClaimed}
+          {totalClaimed}
         </MonetaryText>
       </Box>
     </Flex>
   </Box>
 )
 
-const Vessels = ({ vessels }) => (
+type VesselsProps = {
+  vessels: Vessel[]
+}
+
+const Vessels = ({ vessels }: VesselsProps) => (
   <Box>
     <IconHeading
       icon={faArrowRightArrowLeft}
       fontSize="xl"
-      display={[{ base: 'none', md: 'flex' }]}
+      display={{ base: 'none', md: 'flex' }}
     >
       Vessels
     </IconHeading>
     <Box marginBottom="40px">
       {(vessels.length > 0 && (
-        <Wrap spacing="10" wrap="wrap">
-          {vessels.map((vessel, i) => (
+        <Wrap spacing="10">
+          {vessels.map((vessel, i: number) => (
             <WrapItem key={`vessel-wrap-item-${i}`}>
               <VesselCard {...vessel} />
             </WrapItem>
@@ -284,7 +308,7 @@ function HomeIndex(): JSX.Element {
       totalDebt: 0.0,
       totalStaked: 0.0,
       staked: {
-        staked: 0.0,
+        deposited: 0.0,
         claimable: 0.0,
         totalClaimed: 0.0,
       },
@@ -293,7 +317,7 @@ function HomeIndex(): JSX.Element {
         claimable: 0.0,
         totalClaimed: 0.0,
       },
-      vessels: [],
+      vessels: [] as Vessel[],
     },
     {
       index: 1,
@@ -303,7 +327,7 @@ function HomeIndex(): JSX.Element {
       totalDebt: 35553.03,
       totalStaked: 35553.03,
       staked: {
-        staked: 35553.03,
+        deposited: 35553.03,
         claimable: 0.0,
         totalClaimed: 234.54,
       },
@@ -314,29 +338,40 @@ function HomeIndex(): JSX.Element {
       },
       vessels: [
         {
-          name: 'eth',
-          icon: <EthTokenIcon />,
+          id: 'eth',
+          display: 'ETH',
           available: 216000.0,
           debt: 26664.77,
           systemLtv: 15.0,
           personalLtv: 10.0,
-          oneTimeFee: 0.5,
-          maxLtv: 90.0,
+          fee: 0.5,
+          systemStatus: STATUS_SYSTEM_NORMAL,
+          collateral: 0,
+          redemptionQueue: 0,
+          liquidationPrice: 0,
+          maxSystemLtv: 60,
+          maxPersonalLtv: 80,
         },
         {
-          name: 'rETH',
-          icon: <RethTokenIcon />,
+          id: 'reth',
+          display: 'rETH',
           available: 0,
           debt: 8888.26,
           systemLtv: 15.0,
           personalLtv: 10.0,
-          oneTimeFee: 0.5,
-          maxLtv: 80.0,
+          fee: 0.5,
+          systemStatus: STATUS_SYSTEM_NORMAL,
+          collateral: 0,
+          redemptionQueue: 0,
+          liquidationPrice: 0,
+          maxSystemLtv: 60,
+          maxPersonalLtv: 80,
         },
-      ],
+      ] as Vessel[],
     },
   ]
-  const [vesselSet, setVesselSet] = useState(vData[0])
+
+  const [portfolio, setPortfolio] = useState(vData[0])
 
   return (
     <>
@@ -344,7 +379,7 @@ function HomeIndex(): JSX.Element {
         <IconHeading
           icon={faHome}
           onClick={() => {
-            setVesselSet(vData[vesselSet.index + 1] || vData[0])
+            setPortfolio(vData[portfolio.index + 1] || vData[0])
           }}
         >
           Home
@@ -358,7 +393,7 @@ function HomeIndex(): JSX.Element {
             marginBottom="40px"
           >
             <Tab
-              minWidth={[{ base: '0', md: '200px' }]}
+              minWidth={{ base: '0', md: '200px' }}
               borderBottomWidth="3px"
               fontWeight="medium"
             >
@@ -367,7 +402,7 @@ function HomeIndex(): JSX.Element {
             {isSmallRes && (
               <>
                 <Tab
-                  minWidth={[{ base: '0', md: '200px' }]}
+                  minWidth={{ base: '0', md: '200px' }}
                   borderBottomWidth="3px"
                   fontWeight="medium"
                 >
@@ -376,7 +411,7 @@ function HomeIndex(): JSX.Element {
               </>
             )}
             <Tab
-              minWidth={[{ base: '0', md: '200px' }]}
+              minWidth={{ base: '0', md: '200px' }}
               borderBottomWidth="3px"
               fontWeight="medium"
             >
@@ -387,35 +422,35 @@ function HomeIndex(): JSX.Element {
             <TabPanel padding="0">
               {(isSmallRes && (
                 <Flex direction="column">
-                  <Portfolio {...vesselSet} />
+                  <Portfolio {...portfolio} />
                   <Divider marginBottom="20px" />
                   <Box>
-                    <StablityPool {...vesselSet} />
+                    <StablityPool {...portfolio.pool} />
                     <Divider marginBottom="20px" />
-                    <Staking {...vesselSet} />
+                    <Staking {...portfolio.staked} />
                   </Box>
                 </Flex>
               )) || (
                 <>
                   <SimpleGrid columns={3} templateColumns="8fr 1fr 6fr">
-                    <Portfolio {...vesselSet} />
+                    <Portfolio {...portfolio} />
                     <Box></Box>
                     <Box>
-                      <StablityPool {...vesselSet} />
+                      <StablityPool {...portfolio.pool} />
                       <Divider marginBottom="20px" />
-                      <Staking {...vesselSet} />
+                      <Staking {...portfolio.staked} />
                     </Box>
                   </SimpleGrid>
-                  <Box display={[{ base: 'none', md: 'block' }]}>
+                  <Box display={{ base: 'none', md: 'block' }}>
                     <Divider marginBottom="40px" />
-                    <Vessels vessels={vesselSet.vessels} />
+                    <Vessels vessels={portfolio.vessels} />
                   </Box>
                 </>
               )}
             </TabPanel>
             {isSmallRes && (
               <TabPanel padding="0">
-                <Vessels vessels={vesselSet.vessels} />
+                <Vessels vessels={portfolio.vessels} />
               </TabPanel>
             )}
             <TabPanel padding="0">

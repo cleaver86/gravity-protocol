@@ -1,8 +1,22 @@
 import { createContext } from 'react'
 
-export const MainNavContext = createContext()
+type MainNavContextProps = {
+  toggleMainNav: () => void
+}
 
-export const MainNavProvider = ({ children, toggleMainNav }) => {
+export const MainNavContext = createContext<MainNavContextProps>({
+  toggleMainNav: () => {},
+})
+
+type MainNavProviderProps = {
+  children: React.ReactNode
+  toggleMainNav: () => void
+}
+
+export const MainNavProvider = ({
+  children,
+  toggleMainNav,
+}: MainNavProviderProps): JSX.Element => {
   return (
     <MainNavContext.Provider value={{ toggleMainNav }}>
       {children}

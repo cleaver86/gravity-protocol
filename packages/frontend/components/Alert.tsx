@@ -1,9 +1,13 @@
-import { Alert as ChakraAlert, Text } from '@chakra-ui/react'
+import { Alert as ChakraAlert, AlertProps, Text } from '@chakra-ui/react'
 import FaIcon from './FaIcon'
 import {
   faCircleExclamation,
   faCircleInfo,
 } from '@fortawesome/pro-regular-svg-icons'
+
+type Props = AlertProps & {
+  status: 'info' | 'warning'
+}
 
 const icons = {
   info: {
@@ -19,7 +23,7 @@ const icons = {
 /**
  * Component
  */
-function Alert({ children, status, ...rest }): JSX.Element {
+function Alert({ children, status, ...rest }: Props): JSX.Element {
   return (
     <ChakraAlert
       status={status}

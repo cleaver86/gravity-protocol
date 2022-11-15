@@ -9,47 +9,39 @@ import {
   useMediaQuery,
   IconButton,
 } from '@chakra-ui/react'
+import { faBars } from '@fortawesome/pro-regular-svg-icons'
+import {
+  STATUS_SYSTEM_NORMAL,
+  STATUS_SYSTEM_CAUTION,
+  STATUS_SYSTEM_RECOVERY,
+} from '../../constants'
+import { TokenMonetaryValues, Vessel } from '../../types'
 import { WalletContext } from '../../providers/WalletProvider'
 import { MainNavContext } from '../../providers/MainNavProvider'
-import IconHeading from '../IconHeading'
+import TokenHeading from '../TokenHeading'
 import VesselHeader from '../layout/VesselHeader'
 import VesselBorrow from '../layout/VesselBorrow'
 import FaIcon from '../FaIcon'
-import { faBars } from '@fortawesome/pro-regular-svg-icons'
 import { getLiquidationPriceFromBorrow } from '../../utils/totals'
+
+type VesselProps = {
+  id: string
+  maxPersonalLtv: number
+}
 
 /**
  * Component
  */
-function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
+function Vessel({ id, maxPersonalLtv }: VesselProps): JSX.Element {
   const { toggleMainNav } = useContext(MainNavContext)
   const { balances, prices } = useContext(WalletContext)
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
+  // TODO Remove vessel fixtures and index logic
   const vessels = [
-    /*
-    export const getLiquidationPriceFromBorrow = (borrowAmount, collateralUnits, ltv  ) => {
-      const unitPrice = currency(borrowAmount / (collateralUnits * ltv))
-      return unitPrice.subtract(0.01);
-    }
-    */
-    // {
-    //   index: 0,
-    //   systemStatus: 'normal',
-    //   walletBalance: 50245.46,
-    //   available: 100000.0,
-    //   collateral: 220540.4,
-    //   debt: 64700.24,
-    //   redemptionQueue: 11460400.56,
-    //   liquidationPrice: getLiquidationPriceFromBorrow(64700.24, 165.54, 0.2933), //1332.24
-    //   personalLtv: 29.33,
-    //   systemLtv: 20.46,
-    //   maxSystemLtv: 65.0,
-    //   maxPersonalLtv: 90.0,
-    // },
     {
-      index: 0,
-      systemStatus: 'normal',
-      walletBalance: 61254.87,
+      id: 'eth',
+      display: 'ETH',
+      systemStatus: STATUS_SYSTEM_NORMAL,
       available: 0,
       collateral: 0,
       debt: 0,
@@ -61,9 +53,9 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
       maxPersonalLtv: 90.0,
     },
     {
-      index: 1,
-      systemStatus: 'normal',
-      walletBalance: 14637.27,
+      id: 'eth',
+      display: 'ETH',
+      systemStatus: STATUS_SYSTEM_NORMAL,
       available: 21082.81,
       collateral: 46617.6,
       debt: 21082.81,
@@ -75,9 +67,9 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
       maxPersonalLtv: 90.0,
     },
     {
-      index: 2,
-      systemStatus: 'normal',
-      walletBalance: 11709.81,
+      id: 'eth',
+      display: 'ETH',
+      systemStatus: STATUS_SYSTEM_NORMAL,
       available: 16866.24,
       collateral: 37294.08,
       debt: 21082.81,
@@ -89,9 +81,9 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
       maxPersonalLtv: 90.0,
     },
     {
-      index: 3,
-      systemStatus: 'normal',
-      walletBalance: 8196.87,
+      id: 'eth',
+      display: 'ETH',
+      systemStatus: STATUS_SYSTEM_NORMAL,
       available: 11806.36,
       collateral: 26105.86,
       debt: 21082.81,
@@ -103,9 +95,9 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
       maxPersonalLtv: 90.0,
     },
     {
-      index: 4,
-      systemStatus: 'caution',
-      walletBalance: 14637.27,
+      id: 'eth',
+      display: 'ETH',
+      systemStatus: STATUS_SYSTEM_CAUTION,
       available: 21082.81,
       collateral: 46617.6,
       debt: 21082.81,
@@ -116,24 +108,10 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
       maxSystemLtv: 65.0,
       maxPersonalLtv: 90.0,
     },
-    // {
-    //   index: 5,
-    //   systemStatus: 'recovery',
-    //   walletBalance: 50245.46,
-    //   available: 52651.02,
-    //   collateral: 180540.4,
-    //   debt: 64700.24,
-    //   redemptionQueue: 5064070.22,
-    //   liquidationPrice: 250.0,
-    //   personalLtv: 35.83,
-    //   systemLtv: 67.19,
-    //   maxSystemLtv: 65.0,
-    //   maxPersonalLtv: 65.0,
-    // },
     {
-      index: 5,
-      systemStatus: 'recovery',
-      walletBalance: 14637.27,
+      id: 'eth',
+      display: 'ETH',
+      systemStatus: STATUS_SYSTEM_RECOVERY,
       available: 21082.81,
       collateral: 46617.6,
       debt: 21082.81,
@@ -144,43 +122,45 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
       maxSystemLtv: 65.0,
       maxPersonalLtv: 65.0,
     },
-  ]
-  const [vessel, setVessel] = useState(vessels[0])
-  const walletBalance = balances[name] * prices[name]
+  ] as Vessel[]
+  const [vesselIndex, setVesselIndex] = useState(0)
+  const vessel = vessels[vesselIndex]
+  /////////////////////////////////////
+
+  const walletBalance =
+    balances[vessel.id as keyof TokenMonetaryValues] *
+    prices[vessel.id as keyof TokenMonetaryValues]
 
   return (
     <>
-      <Flex paddingBottom={[{ base: '40px', lg: '80px' }]}>
-        <Flex w="20%" display={[{ base: 'flex', xl: 'none' }]}>
+      <Flex paddingBottom={{ base: '40px', lg: '80px' }}>
+        <Flex w="20%" display={{ base: 'flex', xl: 'none' }}>
           <IconButton
             variant="unstyled"
             icon={<FaIcon height="24px" icon={faBars} />}
+            aria-label="toggle-main-nav"
             onClick={() => {
               toggleMainNav()
             }}
           />
         </Flex>
-        <Flex w="100%" justifyContent={[{ base: 'center', xl: 'flex-start' }]}>
-          <IconHeading
-            icon={icon}
-            isFontAwesome={false}
+        <Flex w="100%" justifyContent={{ base: 'center', xl: 'flex-start' }}>
+          <TokenHeading
+            id={vessel.id}
             justifyContent="center"
             fontSize="2xl"
             marginBottom="0"
             onClick={() => {
-              setVessel(vessels[vessel.index + 1] || vessels[0])
+              setVesselIndex(vessels[vesselIndex + 1] ? vesselIndex + 1 : 0)
             }}
           >
-            {`${name.toUpperCase()} Vessel`}
-          </IconHeading>
+            {`${vessel.display.toUpperCase()} Vessel`}
+          </TokenHeading>
         </Flex>
         <Flex w="20%" justifyContent="center"></Flex>
       </Flex>
       {!isSmallRes && (
-        <VesselHeader
-          walletBalance={balances[name] * prices[name]}
-          {...vessel}
-        />
+        <VesselHeader walletBalance={walletBalance} {...vessel} />
       )}
       <Tabs colorScheme="purple" isFitted={isSmallRes}>
         <TabList
@@ -190,7 +170,7 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
         >
           {isSmallRes && (
             <Tab
-              minWidth={[{ base: '0', md: '200px' }]}
+              minWidth={{ base: '0', md: '200px' }}
               borderBottomWidth="3px"
               fontWeight="medium"
             >
@@ -198,14 +178,14 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
             </Tab>
           )}
           <Tab
-            minWidth={[{ base: '0', md: '200px' }]}
+            minWidth={{ base: '0', md: '200px' }}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
             Borrow
           </Tab>
           <Tab
-            minWidth={[{ base: '0', md: '200px' }]}
+            minWidth={{ base: '0', md: '200px' }}
             borderBottomWidth="3px"
             fontWeight="medium"
           >
@@ -220,10 +200,10 @@ function Vessel({ name, icon, maxLoanToValue }): JSX.Element {
           )}
           <TabPanel padding="0">
             <VesselBorrow
-              name={name}
-              balance={balances[name]}
-              price={prices[name]}
-              maxLoanToValue={maxLoanToValue}
+              name={id}
+              balance={balances[id as keyof TokenMonetaryValues]}
+              price={prices[id as keyof TokenMonetaryValues]}
+              maxPersonalLtv={maxPersonalLtv}
             />
           </TabPanel>
           <TabPanel padding="0">

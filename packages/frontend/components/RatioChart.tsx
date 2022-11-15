@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 import {
   Chart,
+  ChartData,
+  ChartDataset,
+  ChartOptions,
   BarElement,
   CategoryScale,
   LinearScale,
@@ -12,7 +15,8 @@ import { Bar } from 'react-chartjs-2'
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-export const options = {
+const options = {
+  barPercentage: 1,
   indexAxis: 'y' as const,
   responsive: true,
   maintainAspectRatio: false,
@@ -51,23 +55,26 @@ export const options = {
       },
     },
   },
-}
+} as ChartOptions<'bar'>
 
 const data = {
   labels: [''],
   datasets: [],
+} as ChartData<'bar'>
+
+export type RatioChartProps = {
+  datasets: ChartDataset<'bar'>[]
 }
 
 /**
  * Component
  */
-function RatioChart({ datasets, barPercentage }): JSX.Element {
-  const o = { ...options, barPercentage }
+function RatioChart({ datasets }: RatioChartProps): JSX.Element {
   const chartRef = useRef(null)
 
   // Hack to allow fluid animations on data change
   useEffect(() => {
-    const chart = chartRef.current
+    const chart = chartRef.current as null | Chart<'bar'>
 
     if (chart) {
       datasets.forEach((dataset, i) => {
@@ -84,11 +91,7 @@ function RatioChart({ datasets, barPercentage }): JSX.Element {
     }
   }, [datasets])
 
-  return <Bar ref={chartRef} height="20px" data={data} options={o} />
-}
-
-RatioChart.defaultProps = {
-  barPercentage: 1,
+  return <Bar ref={chartRef} height="20px" data={data} options={options} />
 }
 
 export default RatioChart

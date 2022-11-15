@@ -1,19 +1,18 @@
 import { Flex, Heading, HeadingProps } from '@chakra-ui/react'
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-import FaIcon from './FaIcon'
+import TokenIcon from './TokenIcon'
 
 type Props = HeadingProps & {
+  id: string
   children: React.ReactNode
-  icon: IconDefinition
 }
 
 /**
  * Component
  */
-function IconHeading({ children, icon, ...rest }: Props): JSX.Element {
+function IconHeading({ children, id, ...rest }: Props): JSX.Element {
   return (
     <Flex>
-      <FaIcon height="23px" icon={icon} />
+      <TokenIcon id={id} />
       <Heading
         display="flex"
         alignItems="center"

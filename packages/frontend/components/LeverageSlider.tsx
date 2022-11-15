@@ -1,5 +1,6 @@
 import {
   Slider,
+  SliderProps,
   SliderFilledTrack,
   SliderMark,
   SliderThumb,
@@ -9,7 +10,7 @@ import {
 /**
  * Component
  */
-function LeverageSlider({ onChange }): JSX.Element {
+function LeverageSlider({ onChange }: SliderProps): JSX.Element {
   return (
     <Slider
       defaultValue={0}

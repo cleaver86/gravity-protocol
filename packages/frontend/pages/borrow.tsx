@@ -16,21 +16,32 @@ import { faArrowRightArrowLeft } from '@fortawesome/pro-regular-svg-icons'
 import EthTokenIcon from '../public/images/token-eth.svg'
 import RethTokenIcon from '../public/images/token-reth.svg'
 import StethTokenIcon from '../public/images/token-steth.svg'
-import { CURRENCY_ETH, CURRENCY_RETH, CURRENCY_STETH } from '../hooks/useWallet'
+import {
+  STATUS_SYSTEM_NORMAL,
+  STATUS_SYSTEM_RECOVERY,
+  TOKENS,
+} from '../constants'
 
-const Header = ({ available, debt, minted, mintCap }) => (
+type HeaderProps = {
+  available: number
+  debt: number
+  minted: number
+  mintCap: number
+}
+
+const Header = ({ available, debt, minted, mintCap }: HeaderProps) => (
   <Box>
     <SimpleGrid templateColumns="1fr 1fr" spacing={10} padding="40px 0">
       <Flex>
         <Box marginRight="60px">
           <Label>Available to Borrow</Label>
-          <MonetaryText currency="VUSD" fontSize="2xl">
+          <MonetaryText currency={TOKENS.vusd} fontSize="2xl">
             {available}
           </MonetaryText>
         </Box>
         <Box marginRight="60px">
           <Label>Total Debt</Label>
-          <MonetaryText currency="VUSD" fontSize="2xl">
+          <MonetaryText currency={TOKENS.vusd} fontSize="2xl">
             {debt}
           </MonetaryText>
         </Box>
@@ -40,14 +51,14 @@ const Header = ({ available, debt, minted, mintCap }) => (
           <Divider orientation="vertical" />
         </Center>
         <Box marginRight="60px">
-          <Label info>Total Minted</Label>
-          <MonetaryText currency="VUSD" fontSize="2xl">
+          <Label tooltip="TOOL_TIP">Total Minted</Label>
+          <MonetaryText currency={TOKENS.vusd} fontSize="2xl">
             {minted}
           </MonetaryText>
         </Box>
         <Box marginRight="60px">
-          <Label info>Mint Cap</Label>
-          <MonetaryText currency="VUSD" fontSize="2xl">
+          <Label tooltip="TOOL_TIP">Mint Cap</Label>
+          <MonetaryText currency={TOKENS.vusd} fontSize="2xl">
             {mintCap}
           </MonetaryText>
         </Box>
@@ -65,40 +76,59 @@ function Borrow(): JSX.Element {
         available={16000.0}
         debt={10000.0}
         minted={100000.0}
-        mintCap="30,000,000"
+        mintCap={30000000}
       />
       <Box padding="80px 0">
-        <Wrap spacing="10" wrap="wrap">
+        <Wrap spacing="10">
           <WrapItem>
             <VesselCard
-              name={CURRENCY_ETH}
-              icon={<EthTokenIcon />}
+              id={TOKENS.eth}
+              display={'ETH'}
               available={0.0}
               systemLtv={15.0}
-              oneTimeFee={0.5}
-              maxLtv={80.0}
+              systemStatus={STATUS_SYSTEM_NORMAL}
+              fee={0.5}
+              collateral={0}
+              debt={0}
+              redemptionQueue={null}
+              liquidationPrice={null}
+              personalLtv={null}
+              maxSystemLtv={80.0}
+              maxPersonalLtv={90.0}
             />
           </WrapItem>
           <WrapItem>
             <VesselCard
-              name={CURRENCY_RETH}
-              icon={<RethTokenIcon />}
+              id={TOKENS.reth}
+              display="rETH"
               available={16000.0}
-              debt={10000.0}
               systemLtv={15.0}
+              systemStatus={STATUS_SYSTEM_NORMAL}
+              fee={0.5}
+              collateral={0}
+              debt={10000.0}
+              redemptionQueue={null}
+              liquidationPrice={null}
               personalLtv={10.0}
-              oneTimeFee={0.5}
-              maxLtv={90.0}
+              maxSystemLtv={80.0}
+              maxPersonalLtv={90.0}
             />
           </WrapItem>
           <WrapItem>
             <VesselCard
-              name={CURRENCY_STETH}
-              icon={<StethTokenIcon />}
+              id={TOKENS.steth}
+              display="stETH"
               available={0.0}
               systemLtv={100.0}
-              oneTimeFee={0.5}
-              maxLtv={80.0}
+              systemStatus={STATUS_SYSTEM_RECOVERY}
+              fee={0.5}
+              collateral={0}
+              debt={0}
+              redemptionQueue={null}
+              liquidationPrice={null}
+              personalLtv={null}
+              maxSystemLtv={80.0}
+              maxPersonalLtv={90.0}
             />
           </WrapItem>
         </Wrap>

@@ -1,5 +1,4 @@
-import { memo, useEffect, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { memo, useState } from 'react'
 import {
   Box,
   Checkbox,
@@ -14,33 +13,96 @@ import {
   Td,
   useMediaQuery,
 } from '@chakra-ui/react'
-import CurrencyInput from '../CurrencyInput'
-import Summary from '../Summary'
-import Alert from '../Alert'
-import { getCurrency, getFormattedCurrency } from '../../utils/currency'
+import Summary, { SubItemType as SummarySubItemType } from '../Summary'
+import { getFormattedCurrency } from '../../utils/currency'
 
-const getTotalFromRowIndexes = (claimableAssets, indexes, key) => {
+type ClaimableAsset = {
+  id: string
+  name: string
+  amount: number
+  liquidationPrice: number
+  marketPrice: number
+  claimValue: number
+  profitLoss: number
+  grvtRewards: number
+}
+
+const getTotalFromRowIndexes = (
+  claimableAssets: ClaimableAsset[],
+  indexes: Set<number>,
+  key: string
+) => {
   return claimableAssets.reduce((previousValue, currentValue, i) => {
-    if (indexes.has(i)) {
-      return previousValue + currentValue[key]
+    const assetValue = currentValue[key as keyof ClaimableAsset]
+    if (indexes.has(i) && typeof assetValue === 'number') {
+      return previousValue + assetValue
     }
 
     return previousValue
-  }, 0)
+  }, 0 as number)
+}
+
+const getAssetSummaryItems = (
+  claimableAssets: ClaimableAsset[],
+  checkedAssetIndexes: Set<number>,
+  checkedToVusdIndexes: Set<number>,
+  checkedToVesselIndexes: Set<number>
+): SummarySubItemType[] => {
+  const initialArray =
+    checkedToVusdIndexes.size > 0
+      ? [
+          {
+            id: 'vusd',
+            value: getFormattedCurrency(
+              claimableAssets.reduce((previousValue, { claimValue }, i) => {
+                if (checkedAssetIndexes.has(i) && checkedToVusdIndexes.has(i)) {
+                  // TODO Calculate from VUSD price
+                  return previousValue + claimValue
+                }
+                return previousValue
+              }, 0)
+            ),
+            symbol: 'VUSD',
+          },
+        ]
+      : ([] as SummarySubItemType[])
+
+  const items = claimableAssets.reduce((previousValue, { amount, name }, i) => {
+    if (
+      checkedAssetIndexes.has(i) &&
+      !checkedToVusdIndexes.has(i) &&
+      !checkedToVesselIndexes.has(i)
+    ) {
+      previousValue.push({
+        id: name,
+        value: amount,
+        symbol: name,
+      })
+    }
+    return previousValue
+  }, initialArray)
+
+  return items
+}
+
+type Props = {
+  claimableAssets: ClaimableAsset[]
 }
 
 /**
  * Component
  */
-function PoolClaim({ claimableAssets }): JSX.Element {
+function PoolClaim({ claimableAssets }: Props): JSX.Element {
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
-  const [checkedAssetIndexes, setCheckedAssetIndexes] = useState(
+  const [checkedAssetIndexes, setCheckedAssetIndexes] = useState<Set<number>>(
     new Set(claimableAssets.map((a, i) => i))
   )
-  const [checkedToVusdIndexes, setCheckedToVusdIndexes] = useState(new Set())
-  const [checkedToVesselIndexes, setCheckedToVesselIndexes] = useState(
+  const [checkedToVusdIndexes, setCheckedToVusdIndexes] = useState<Set<number>>(
     new Set()
   )
+  const [checkedToVesselIndexes, setCheckedToVesselIndexes] = useState<
+    Set<number>
+  >(new Set())
 
   return (
     <>
@@ -48,7 +110,7 @@ function PoolClaim({ claimableAssets }): JSX.Element {
         <Table variant="simple" w="auto">
           <Thead>
             <Tr>
-              <Th w="30px" maxW="30px" padding="0 5px" isMobile={isSmallRes}>
+              <Th w="30px" maxW="30px" padding="0 5px">
                 <Checkbox
                   size="lg"
                   isChecked={
@@ -65,13 +127,7 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                   }}
                 />
               </Th>
-              <Th
-                w="10%"
-                color="gray.300"
-                fontSize="sm"
-                fontWeight="semibold"
-                isMobile={isSmallRes}
-              >
+              <Th w="10%" color="gray.300" fontSize="sm" fontWeight="semibold">
                 Asset
               </Th>
               <Th
@@ -80,7 +136,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 color="gray.300"
                 fontSize="sm"
                 fontWeight="semibold"
-                isMobile={isSmallRes}
               >
                 <Flex alignItems="center">
                   <Checkbox
@@ -111,7 +166,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 color="gray.300"
                 fontSize="sm"
                 fontWeight="semibold"
-                isMobile={isSmallRes}
               >
                 <Flex alignItems="center">
                   <Checkbox
@@ -141,7 +195,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 color="gray.300"
                 fontSize="sm"
                 fontWeight="semibold"
-                isMobile={isSmallRes}
                 isNumeric
               >
                 liq. Price
@@ -151,7 +204,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 color="gray.300"
                 fontSize="sm"
                 fontWeight="semibold"
-                isMobile={isSmallRes}
                 isNumeric
               >
                 Mkt Price
@@ -161,7 +213,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 color="gray.300"
                 fontSize="sm"
                 fontWeight="semibold"
-                isMobile={isSmallRes}
                 isNumeric
               >
                 Claim Value
@@ -171,7 +222,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 color="gray.300"
                 fontSize="sm"
                 fontWeight="semibold"
-                isMobile={isSmallRes}
                 isNumeric
               >
                 P/L
@@ -188,7 +238,7 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                   marketPrice,
                   claimValue,
                   profitLoss,
-                },
+                }: ClaimableAsset,
                 i
               ) => {
                 const borderBottom =
@@ -201,7 +251,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                       maxW="30px"
                       padding="0 5px"
                       borderBottom={borderBottom}
-                      isMobile={isSmallRes}
                     >
                       <Checkbox
                         size="lg"
@@ -224,14 +273,8 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                       w="10%"
                       borderBottom={borderBottom}
                       fontWeight="medium"
-                      isMobile={isSmallRes}
                     >{`${amount} ${name}`}</Td>
-                    <Td
-                      w="120px"
-                      maxW="120px"
-                      borderBottom={borderBottom}
-                      isMobile={isSmallRes}
-                    >
+                    <Td w="120px" maxW="120px" borderBottom={borderBottom}>
                       <Checkbox
                         size="lg"
                         isChecked={
@@ -253,12 +296,7 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                         }}
                       />
                     </Td>
-                    <Td
-                      w="130px"
-                      maxW="130px"
-                      borderBottom={borderBottom}
-                      isMobile={isSmallRes}
-                    >
+                    <Td w="130px" maxW="130px" borderBottom={borderBottom}>
                       <Checkbox
                         size="lg"
                         isChecked={
@@ -284,7 +322,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                       w="20%"
                       borderBottom={borderBottom}
                       fontWeight="medium"
-                      isMobile={isSmallRes}
                       isNumeric
                     >
                       {getFormattedCurrency(liquidationPrice)}
@@ -293,7 +330,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                       w="20%"
                       borderBottom={borderBottom}
                       fontWeight="medium"
-                      isMobile={isSmallRes}
                       isNumeric
                     >
                       {getFormattedCurrency(marketPrice)}
@@ -302,7 +338,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                       w="30%"
                       borderBottom={borderBottom}
                       fontWeight="medium"
-                      isMobile={isSmallRes}
                       isNumeric
                     >
                       {getFormattedCurrency(claimValue)}
@@ -312,7 +347,6 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                       borderBottom={borderBottom}
                       fontWeight="medium"
                       color="green"
-                      isMobile={isSmallRes}
                       isNumeric
                     >
                       {`+${getFormattedCurrency(profitLoss)}`}
@@ -359,44 +393,11 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 ),
                 symbol: 'USD',
                 tooltip: 'Some Tooltip',
-                subItems: claimableAssets.reduce(
-                  (previousValue, { amount, name }, i) => {
-                    if (
-                      checkedAssetIndexes.has(i) &&
-                      !checkedToVusdIndexes.has(i) &&
-                      !checkedToVesselIndexes.has(i)
-                    ) {
-                      previousValue.push({
-                        id: name,
-                        value: amount,
-                        symbol: name,
-                      })
-                    }
-                    return previousValue
-                  },
-                  checkedToVusdIndexes.size > 0
-                    ? [
-                        {
-                          id: 'vusd',
-                          value: getFormattedCurrency(
-                            claimableAssets.reduce(
-                              (previousValue, { claimValue }, i) => {
-                                if (
-                                  checkedAssetIndexes.has(i) &&
-                                  checkedToVusdIndexes.has(i)
-                                ) {
-                                  // TODO Calculate from VUSD price
-                                  return previousValue + claimValue
-                                }
-                                return previousValue
-                              },
-                              0
-                            )
-                          ),
-                          symbol: 'VUSD',
-                        },
-                      ]
-                    : []
+                subItems: getAssetSummaryItems(
+                  claimableAssets,
+                  checkedAssetIndexes,
+                  checkedToVusdIndexes,
+                  checkedToVesselIndexes
                 ),
               },
               {
@@ -418,20 +419,21 @@ function PoolClaim({ claimableAssets }): JSX.Element {
                 tooltip: 'Some Tooltip',
                 hidden: checkedToVesselIndexes.size === 0,
                 subItems: claimableAssets.reduce(
-                  (previousValue, { amount, name }, i) => {
+                  (previousValue, currentValue, i) => {
+                    let arr = [...previousValue]
                     if (
                       checkedAssetIndexes.has(i) &&
                       checkedToVesselIndexes.has(i)
                     ) {
-                      previousValue.push({
-                        id: name,
-                        value: amount,
-                        symbol: name,
+                      arr.push({
+                        id: currentValue.id,
+                        value: currentValue.amount,
+                        symbol: currentValue.name,
                       })
                     }
-                    return previousValue
+                    return arr
                   },
-                  []
+                  [] as SummarySubItemType[]
                 ),
               },
               {

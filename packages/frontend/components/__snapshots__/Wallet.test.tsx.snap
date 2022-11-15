@@ -1,0 +1,462 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wallet Should match snapshot 1`] = `
+<div>
+  <div
+    class="css-1swrp63"
+  >
+    <div
+      class="css-10klw3m"
+    >
+      <div
+        class="css-v57d2b"
+      >
+        <div
+          class="css-10ucka"
+        >
+          <p
+            class="chakra-text css-1u8qc7s"
+          >
+            Wallet
+          </p>
+        </div>
+        <div
+          class="css-17xejub"
+        />
+        <div
+          class="css-s4f5xd"
+        >
+          <button
+            aria-controls="menu-list-:r1:"
+            aria-expanded="false"
+            aria-haspopup="menu"
+            class="chakra-button chakra-menu__menu-button css-z3hoyf"
+            id="menu-button-:r1:"
+            type="button"
+          >
+            <span
+              class="css-xl71ch"
+            >
+              <div
+                class="css-70qvj9"
+              >
+                <img
+                  alt="MetaMask"
+                  class="chakra-image css-xdeki6"
+                  src="/images/logo-metamask.png"
+                />
+                <p
+                  class="chakra-text css-mfm9o5"
+                >
+                  0xf61B...9EEf
+                </p>
+                <div
+                  class="css-1y6ic72"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="svg-inline--fa fa-angle-down  css-4qm0av"
+                    data-icon="angle-down"
+                    data-prefix="fas"
+                    focusable="false"
+                    role="img"
+                    viewBox="0 0 448 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </span>
+          </button>
+          <div
+            class="css-r6z5ec"
+            style="visibility: hidden; position: absolute; min-width: max-content; inset: 0 auto auto 0;"
+          >
+            <div
+              aria-orientation="vertical"
+              class="chakra-menu__menu-list css-1vcnbi6"
+              id="menu-list-:r1:"
+              role="menu"
+              style="transform-origin: var(--popper-transform-origin); opacity: 0; visibility: hidden; transform: scale(0.8) translateZ(0);"
+              tabindex="-1"
+            >
+              <button
+                class="chakra-menu__menuitem css-h3e82i"
+                data-index="0"
+                id="menu-list-:r1:-menuitem-:r2:"
+                role="menuitem"
+                tabindex="-1"
+                type="button"
+              >
+                Disconnect
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-cf1nu1"
+      >
+        <div
+          class="css-1sb7ptk"
+        >
+          <div
+            class="css-tcv3m"
+          >
+            <div
+              class="chakra-stack css-zsoya5"
+            >
+              <div
+                class="css-k008qs"
+              >
+                <div
+                  class="css-1wjoefq"
+                >
+                  <div
+                    class="css-1nsz27u"
+                  >
+                    <svg />
+                  </div>
+                </div>
+                <div
+                  class="css-hboir5"
+                >
+                  <div
+                    class="css-0"
+                  >
+                    <div
+                      class="css-3gj7jk"
+                    >
+                      <p
+                        class="chakra-text css-s8307y"
+                        data-testid="GRVT-balance"
+                      >
+                        0
+                      </p>
+                      <p
+                        class="chakra-text css-1qdnhws"
+                      >
+                        GRVT
+                      </p>
+                    </div>
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="GRVT-total"
+                    >
+                      $0.00
+                    </p>
+                  </div>
+                  <div
+                    class="css-17xejub"
+                  />
+                  <div
+                    class="css-s2uf1z"
+                  >
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="GRVT-price"
+                    >
+                      $0.00
+                    </p>
+                    <a
+                      class="chakra-link css-1h52md4"
+                      href="https://curve.fi/grvt"
+                    >
+                      Buy
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-stack__divider css-l0hi3m"
+              />
+              <div
+                class="css-k008qs"
+              >
+                <div
+                  class="css-1wjoefq"
+                >
+                  <div
+                    class="css-1nsz27u"
+                  >
+                    <svg />
+                  </div>
+                </div>
+                <div
+                  class="css-hboir5"
+                >
+                  <div
+                    class="css-0"
+                  >
+                    <div
+                      class="css-3gj7jk"
+                    >
+                      <p
+                        class="chakra-text css-s8307y"
+                        data-testid="VUSD-balance"
+                      >
+                        0
+                      </p>
+                      <p
+                        class="chakra-text css-1qdnhws"
+                      >
+                        VUSD
+                      </p>
+                    </div>
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="VUSD-total"
+                    >
+                      $0.00
+                    </p>
+                  </div>
+                  <div
+                    class="css-17xejub"
+                  />
+                  <div
+                    class="css-s2uf1z"
+                  >
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="VUSD-price"
+                    >
+                      $0.00
+                    </p>
+                    <a
+                      class="chakra-link css-1h52md4"
+                      href="https://curve.fi/vusd"
+                    >
+                      Buy
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-stack__divider css-l0hi3m"
+              />
+              <div
+                class="css-k008qs"
+              >
+                <div
+                  class="css-1wjoefq"
+                >
+                  <div
+                    class="css-1nsz27u"
+                  >
+                    <svg />
+                  </div>
+                </div>
+                <div
+                  class="css-hboir5"
+                >
+                  <div
+                    class="css-0"
+                  >
+                    <div
+                      class="css-3gj7jk"
+                    >
+                      <p
+                        class="chakra-text css-s8307y"
+                        data-testid="ETH-balance"
+                      >
+                        0
+                      </p>
+                      <p
+                        class="chakra-text css-1qdnhws"
+                      >
+                        ETH
+                      </p>
+                    </div>
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="ETH-total"
+                    >
+                      $0.00
+                    </p>
+                  </div>
+                  <div
+                    class="css-17xejub"
+                  />
+                  <div
+                    class="css-s2uf1z"
+                  >
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="ETH-price"
+                    >
+                      $0.00
+                    </p>
+                    <a
+                      class="chakra-link css-1h52md4"
+                      href="https://curve.fi/eth"
+                    >
+                      Buy
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-stack__divider css-l0hi3m"
+              />
+              <div
+                class="css-k008qs"
+              >
+                <div
+                  class="css-1wjoefq"
+                >
+                  <div
+                    class="css-1nsz27u"
+                  >
+                    <svg />
+                  </div>
+                </div>
+                <div
+                  class="css-hboir5"
+                >
+                  <div
+                    class="css-0"
+                  >
+                    <div
+                      class="css-3gj7jk"
+                    >
+                      <p
+                        class="chakra-text css-s8307y"
+                        data-testid="rETH-balance"
+                      >
+                        0
+                      </p>
+                      <p
+                        class="chakra-text css-1qdnhws"
+                      >
+                        rETH
+                      </p>
+                    </div>
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="rETH-total"
+                    >
+                      $0.00
+                    </p>
+                  </div>
+                  <div
+                    class="css-17xejub"
+                  />
+                  <div
+                    class="css-s2uf1z"
+                  >
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="rETH-price"
+                    >
+                      $0.00
+                    </p>
+                    <a
+                      class="chakra-link css-1h52md4"
+                      href="https://curve.fi/reth"
+                    >
+                      Buy
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="chakra-stack__divider css-l0hi3m"
+              />
+              <div
+                class="css-k008qs"
+              >
+                <div
+                  class="css-1wjoefq"
+                >
+                  <div
+                    class="css-1nsz27u"
+                  >
+                    <svg />
+                  </div>
+                </div>
+                <div
+                  class="css-hboir5"
+                >
+                  <div
+                    class="css-0"
+                  >
+                    <div
+                      class="css-3gj7jk"
+                    >
+                      <p
+                        class="chakra-text css-s8307y"
+                        data-testid="stETH-balance"
+                      >
+                        0
+                      </p>
+                      <p
+                        class="chakra-text css-1qdnhws"
+                      >
+                        stETH
+                      </p>
+                    </div>
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="stETH-total"
+                    >
+                      $0.00
+                    </p>
+                  </div>
+                  <div
+                    class="css-17xejub"
+                  />
+                  <div
+                    class="css-s2uf1z"
+                  >
+                    <p
+                      class="chakra-text css-1icp0bk"
+                      data-testid="stETH-price"
+                    >
+                      $0.00
+                    </p>
+                    <a
+                      class="chakra-link css-1h52md4"
+                      href="https://curve.fi/steth"
+                    >
+                      Buy
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="css-17xejub"
+          />
+          <div
+            class="css-xrdnfo"
+          >
+            <div
+              class="css-1rwzck"
+            >
+              <p
+                class="chakra-text css-1u8qc7s"
+              >
+                Total
+              </p>
+            </div>
+            <p
+              class="chakra-text css-1vxklou"
+            >
+              $0.00
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span
+    hidden=""
+    id="__chakra_env"
+  />
+</div>
+`;

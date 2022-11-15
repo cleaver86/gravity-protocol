@@ -1,7 +1,8 @@
-import { useRef } from 'react'
 import { Box } from '@chakra-ui/react'
 import {
   Chart as ChartJS,
+  ChartData,
+  ChartOptions,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -42,7 +43,7 @@ const options = {
       },
       ticks: {
         color: '#847D9F',
-        stepSize: ({ scale: { max } }) => {
+        stepSize: ({ scale: { max } }: { scale: { max: number } }) => {
           const segments = 5
           const maxValueRounded = Math.round(max / 100) * 100
           return maxValueRounded / segments
@@ -67,20 +68,15 @@ const options = {
       display: false,
     },
   },
-}
+} as ChartOptions<'line'>
 
 /**
  * Component
  */
-
-function IncomeChart({ labels, datasets }): JSX.Element {
-  const chartRef = useRef(null)
-
-  return (
-    <Box height="215px">
-      <Line ref={chartRef} options={options} data={{ labels, datasets }} />
-    </Box>
-  )
-}
+const IncomeChart = ({ labels, datasets }: ChartData<'line'>): JSX.Element => (
+  <Box height="215px">
+    <Line options={options} data={{ labels, datasets }} />
+  </Box>
+)
 
 export default IncomeChart

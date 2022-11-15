@@ -4,58 +4,121 @@ import {
   Checkbox,
   Divider,
   Flex,
-  SimpleGrid,
   TableContainer,
   Table,
-  Thead,
   Tbody,
   Tr,
-  Th,
   Td as ChakraTd,
+  TableCellProps,
   Text,
+  TextProps,
+  Tooltip,
 } from '@chakra-ui/react'
-import Alert from './Alert'
-import Label from './Label'
+import FaIcon from '../components/FaIcon'
+import { faCircleInfo } from '@fortawesome/pro-regular-svg-icons'
 
-const SummaryLabel = ({ children, muted, tooltip, info }) => (
-  <Label
-    textTransform="capitalize"
-    orientation="horizontal"
-    color={muted ? 'gray.300' : 'gray.100'}
-    fontWeight="medium"
-    fontSize="md"
-    tooltip={tooltip}
-    info={info}
-  >
-    {children}
-  </Label>
+type SummaryLabelProps = {
+  children: React.ReactNode
+  muted?: boolean
+  tooltip?: string
+}
+
+const SummaryLabel = ({
+  children,
+  muted = false,
+  tooltip,
+}: SummaryLabelProps) => (
+  <Flex alignItems="center" marginBottom="10px">
+    {tooltip && (
+      <Tooltip label={tooltip} borderRadius="3px">
+        <Box marginTop="-2px" marginRight="5px">
+          <FaIcon icon={faCircleInfo} color="gray.300" />
+        </Box>
+      </Tooltip>
+    )}
+    <Text
+      textTransform="capitalize"
+      color={muted ? 'gray.300' : 'gray.100'}
+      fontWeight="medium"
+      fontSize="md"
+    >
+      {children}
+    </Text>
+  </Flex>
 )
 
-const SummaryText = ({ children, fontSize, muted, ...rest }) => (
+type SummaryTextProps = TextProps & {
+  muted?: boolean
+}
+
+const SummaryText = ({
+  children,
+  muted = false,
+  ...rest
+}: SummaryTextProps) => (
   <Text
-    fontSize={fontSize}
     color={muted ? 'gray.300' : 'gray.100'}
     fontWeight="medium"
+    align="right"
     {...rest}
   >
     {children}
   </Text>
 )
 
-const Td = ({ children, ...rest }) => (
+const Td = ({ children, ...rest }: TableCellProps) => (
   <ChakraTd whiteSpace="normal" padding="0.40rem 0" {...rest}>
     {children}
   </ChakraTd>
 )
 
+export type SubItemType = {
+  id: string
+  label?: string
+  value: string | number
+  symbol: string
+}
+
+type Item = {
+  id: string
+  label: string
+  value: string
+  symbol: string
+  tooltip: string
+  hidden?: boolean
+  color?: string
+  subItems?: SubItemType[]
+}
+
+type Action = {
+  id: string
+  label: string
+  tooltip: string
+  onChange: () => void
+}
+
+type SummaryProps = {
+  items: Item[]
+  additionalItems: Item[]
+  actions: Action[]
+  proceedText: string
+  onProceed: () => void
+}
+
 /**
  * Component
  */
-function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
+const Summary = ({
+  items,
+  additionalItems,
+  actions,
+  proceedText,
+  onProceed,
+}: SummaryProps): JSX.Element => {
   return (
     <Box
       w="100%"
-      padding={[{ base: '20px 20px 40px 20px', sm: '20px 30px 40px 30px' }]}
+      padding={{ base: '20px 20px 40px 20px', sm: '20px 30px 40px 30px' }}
       background="purple.900"
       borderRadius="10px"
     >
@@ -83,9 +146,7 @@ function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
                             subItems && subItems.length > 0 ? 0 : '.25rem'
                           }
                         >
-                          <SummaryLabel tooltip={tooltip} info>
-                            {label}
-                          </SummaryLabel>
+                          <SummaryLabel tooltip={tooltip}>{label}</SummaryLabel>
                         </Td>
                         <Td w="30%">
                           <SummaryText
@@ -97,45 +158,45 @@ function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
                           </SummaryText>
                         </Td>
                         <Td w="50px" paddingLeft="10px" textAlign="left">
-                          <SummaryText fontSize="sm" fontWeight="medium">
-                            {symbol}
-                          </SummaryText>
+                          <SummaryText fontSize="sm">{symbol}</SummaryText>
                         </Td>
                       </Tr>
                       {subItems && (
                         <>
-                          {subItems.map(({ label, value, symbol }) => (
-                            <Tr
-                              key={`${id}-summary-sub-item-row`}
-                              borderLeft="1px solid"
-                              borderColor="gray.400"
-                            >
-                              <Td padding="0.25rem 0">
-                                <SummaryLabel align="right">
-                                  {label}
-                                </SummaryLabel>
-                              </Td>
-                              <Td padding="0.25rem 0">
-                                <SummaryText
-                                  fontSize="sm"
-                                  align="right"
-                                  fontWeight="semibold"
-                                >
-                                  {value}
-                                </SummaryText>
-                              </Td>
-                              <Td
-                                padding="0.25rem 0"
-                                w="50px"
-                                paddingLeft="10px"
-                                textAlign="left"
+                          {subItems.map(
+                            (item: SubItemType): JSX.Element => (
+                              <Tr
+                                key={`${id}-summary-sub-item-row`}
+                                borderLeft="1px solid"
+                                borderColor="gray.400"
                               >
-                                <SummaryText fontSize="sm" fontWeight="medium">
-                                  {symbol}
-                                </SummaryText>
-                              </Td>
-                            </Tr>
-                          ))}
+                                <Td padding="0.25rem 0">
+                                  <SummaryLabel>
+                                    {item.label || ''}
+                                  </SummaryLabel>
+                                </Td>
+                                <Td padding="0.25rem 0">
+                                  <SummaryText
+                                    fontSize="sm"
+                                    align="right"
+                                    fontWeight="semibold"
+                                  >
+                                    {item.value}
+                                  </SummaryText>
+                                </Td>
+                                <Td
+                                  padding="0.25rem 0"
+                                  w="50px"
+                                  paddingLeft="10px"
+                                  textAlign="left"
+                                >
+                                  <SummaryText fontSize="sm">
+                                    {item.symbol}
+                                  </SummaryText>
+                                </Td>
+                              </Tr>
+                            )
+                          )}
                         </>
                       )}
                     </>
@@ -156,9 +217,7 @@ function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
                   <>
                     <Tr key={`${id}-summary-action-row`}>
                       <Td w="90%">
-                        <SummaryLabel tooltip={tooltip} info>
-                          {label}
-                        </SummaryLabel>
+                        <SummaryLabel tooltip={tooltip}>{label}</SummaryLabel>
                       </Td>
                       <Td w="10%" textAlign="right">
                         <Checkbox size="lg" />
@@ -182,7 +241,7 @@ function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
                     <>
                       <Tr key={`${id}-summary-item-row`}>
                         <Td>
-                          <SummaryLabel tooltip={tooltip} info muted>
+                          <SummaryLabel tooltip={tooltip} muted>
                             {label}
                           </SummaryLabel>
                         </Td>
@@ -192,7 +251,7 @@ function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
                           </SummaryText>
                         </Td>
                         <Td>
-                          <SummaryText fontSize="sm" fontWeight="medium" muted>
+                          <SummaryText fontSize="sm" muted>
                             {symbol}
                           </SummaryText>
                         </Td>
@@ -211,7 +270,7 @@ function Summary({ items, additionalItems, actions, proceedText, onProcced }) {
         size="lg"
         marginTop="20px"
         borderRadius="40px"
-        onClick={onProcced}
+        onClick={onProceed}
       >
         {proceedText}
       </Button>

@@ -4,19 +4,37 @@ import {
   Flex,
   InputGroup,
   InputRightElement,
+  InputProps,
   Text,
 } from '@chakra-ui/react'
 import { NumericFormat } from 'react-number-format'
 import Label from './Label'
 import Input from './Input'
 
-const CustomInput = ({
+type InputWrapperProps = InputProps & {
+  currency: string
+  label: string
+  available: string
+  onClickPercentage?: (arg0: number) => void
+}
+
+type CurrencyInputProps = InputProps & {
+  currency: string
+  label: string
+  available: string
+  decimals?: number
+  onClickPercentage?: (arg0: number) => void
+  onValueChange: (arg0: number | null) => void
+  isAllowed: (arg0: number | null) => boolean
+}
+
+const InputWrapper = ({
   currency,
   label,
   available,
   onClickPercentage,
   ...rest
-}) => {
+}: InputWrapperProps) => {
   return (
     <>
       <Flex justifyContent="right">
@@ -84,19 +102,33 @@ const CustomInput = ({
 /**
  * Component
  */
-function CurrencyInput({ decimals, onChange, ...rest }): JSX.Element {
+function CurrencyInput({
+  name,
+  label,
+  currency,
+  available,
+  decimals = 2,
+  onValueChange,
+  isAllowed,
+}: CurrencyInputProps): JSX.Element {
   return (
     <NumericFormat
-      customInput={CustomInput}
+      customInput={InputWrapper}
+      name={name}
+      label={label}
+      currency={currency}
+      available={available}
       allowLeadingZeros={false}
       allowNegative={false}
       decimalScale={decimals}
       thousandSeparator=","
       placeholder="0.00"
-      onValueChange={(values) => {
-        onChange(values.floatValue)
+      onValueChange={({ floatValue }) => {
+        onValueChange(floatValue || null)
       }}
-      {...rest}
+      isAllowed={({ floatValue }) => {
+        return isAllowed(floatValue || null)
+      }}
     />
   )
 }

@@ -1,9 +1,14 @@
 import { Badge, Text } from '@chakra-ui/react'
+import { StatusType } from '../types'
 import FaIcon from './FaIcon'
 import {
   faCheckCircle,
   faExclamationCircle,
 } from '@fortawesome/pro-regular-svg-icons'
+
+export type StatusProps = {
+  type: StatusType
+}
 
 const status = {
   normal: {
@@ -23,7 +28,7 @@ const status = {
 /**
  * Component
  */
-function Status({ type }): JSX.Element {
+const Status = ({ type }: StatusProps): JSX.Element => {
   return (
     <Badge
       display="inline-flex"
@@ -33,16 +38,12 @@ function Status({ type }): JSX.Element {
       padding="5px 20px 5px 18px"
       boxShadow="none"
       border="1px solid"
-      borderColor={status[type].color}
+      borderColor={status[type]?.color}
       color={status[type].color}
       borderRadius="20px"
       fontSize="sm"
     >
-      <FaIcon
-        height="15px"
-        icon={status[type].icon}
-        color={status[type].color}
-      />
+      <FaIcon icon={status[type]?.icon} color={status[type]?.color} />
       <Text marginLeft="5px">{type}</Text>
     </Badge>
   )

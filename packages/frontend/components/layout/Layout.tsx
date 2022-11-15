@@ -8,6 +8,7 @@ import MainNav from './MainNav'
 import Head, { MetaProps } from './Head'
 import { MainNavProvider } from '../../providers/MainNavProvider'
 import { WalletProvider } from '../../providers/WalletProvider'
+import { WalletProvider as WalletProviderType } from '../../types'
 
 // Extends `window` to add `ethereum`.
 declare global {
@@ -39,17 +40,17 @@ const Gradiant = () => (
  */
 const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
   const { account, deactivate } = useEthers()
-  const [wallet, setWallet] = useState()
+  const [walletName, setWalletName] = useState<WalletProviderType['name']>()
   const [toggleNav, setToggleNav] = useState(false)
   const { notifications } = useNotifications()
 
   return (
     <>
       <Head customMeta={customMeta} />
-      {account ? (
+      {account && walletName ? (
         <WalletProvider account={account}>
           <Flex
-            direction={[{ base: 'column', xl: 'row' }]}
+            direction={{ base: 'column', xl: 'row' }}
             h="calc(100vh)"
             justify="space-between"
             overflow="hidden"
@@ -64,7 +65,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
             <Container
               h="100%"
               padding="0 30px"
-              paddingTop={[{ base: '10px', xl: '40px' }]}
+              paddingTop={{ base: '10px', xl: '40px' }}
               maxWidth="68.750em"
               overflow="scroll"
               position="relative"
@@ -85,13 +86,16 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
               </MainNavProvider>
               <Notifications notifications={notifications} />
             </Container>
-
             <Box
-              w={[{ base: '100%', xl: '300px' }]}
+              w={{ base: '100%', xl: '300px' }}
               position="relative"
               zIndex={50}
             >
-              <Wallet name={wallet} account={account} deactivate={deactivate} />
+              <Wallet
+                name={walletName}
+                account={account}
+                deactivate={deactivate}
+              />
             </Box>
           </Flex>
         </WalletProvider>
@@ -99,7 +103,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
         <Flex width="100%" height="100vh" justifyContent="center">
           <ConnectWallet
             onConnect={(wallet) => {
-              setWallet(wallet)
+              setWalletName(wallet)
             }}
           />
         </Flex>

@@ -6,15 +6,27 @@ import Summary from '../Summary'
 import Alert from '../Alert'
 import { getCurrency, getFormattedCurrency } from '../../utils/currency'
 
+type PoolWithdrawProps = {
+  totalDeposit: number
+  poolTvl: number
+}
+
+type FormData = {
+  withdrawalAmount: null | number
+}
+
 /**
  * Component
  */
-function PoolWithdraw({ totalDeposit, poolTvl }): JSX.Element {
+function PoolWithdraw({
+  totalDeposit,
+  poolTvl,
+}: PoolWithdrawProps): JSX.Element {
   const [availableToWithdraw, setAvailableToWithdraw] = useState(totalDeposit)
-  const { control, handleSubmit, setValue, watch } = useForm({
+  const { control, handleSubmit, setValue, watch } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
-      withdrawalAmount: '',
+      withdrawalAmount: null,
     },
   })
   const withdrawalAmount = watch('withdrawalAmount', 0)
@@ -34,8 +46,8 @@ function PoolWithdraw({ totalDeposit, poolTvl }): JSX.Element {
   return (
     <SimpleGrid
       columns={{ sm: 1, lg: 2 }}
-      spacing={[{ base: 10, '2xl': 20 }]}
-      gridGap={[{ base: 'none', lg: '2.5rem' }]}
+      spacing={{ base: 10, '2xl': 20 }}
+      gridGap={{ base: 'none', lg: '2.5rem' }}
       marginBottom="90px"
     >
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -45,31 +57,27 @@ function PoolWithdraw({ totalDeposit, poolTvl }): JSX.Element {
           render={({ field: { onChange, ...rest } }) => (
             <FormControl marginBottom="50px">
               <CurrencyInput
+                name="withdrawalAmount"
                 currency="VUSD"
                 label="Amount"
                 decimals={2}
                 available={getFormattedCurrency(totalDeposit, 2)}
-                isAllowed={(values) => {
-                  const { value } = values
-
-                  return value <= totalDeposit
+                isAllowed={(value) => {
+                  return value == null || value <= totalDeposit
                 }}
-                onValueChange={(values) => {
-                  onChange(values.floatValue)
-                }}
+                onValueChange={onChange}
                 onClickPercentage={(percentage) => {
                   onChange(getCurrency(totalDeposit * percentage))
                 }}
-                {...rest}
               />
             </FormControl>
           )}
         />
       </form>
       <Box>
-        {(!withdrawalAmount && (
+        {withdrawalAmount == null ? (
           <Alert status="info">WITHDRAWAL_MESSAGE_HERE</Alert>
-        )) || (
+        ) : (
           <Summary
             items={[
               {

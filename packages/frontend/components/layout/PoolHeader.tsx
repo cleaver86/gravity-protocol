@@ -14,7 +14,13 @@ import Label from '../Label'
 import MonetaryText from '../MonetaryText'
 import IncomeChart from '../IncomeChart'
 
-const PoolInfo = ({ totalDeposit, poolShare, poolTvl }) => (
+type PoolInfoProps = {
+  totalDeposit: number
+  poolShare: number
+  poolTvl: number
+}
+
+const PoolInfo = ({ totalDeposit, poolShare, poolTvl }: PoolInfoProps) => (
   <Flex direction="column">
     <Box marginBottom="3px">
       <Label>Deposited</Label>
@@ -35,7 +41,17 @@ const PoolInfo = ({ totalDeposit, poolShare, poolTvl }) => (
   </Flex>
 )
 
-const ClaimInfo = ({ totalClaimed, totalClaimable, grvtRewards }) => (
+type ClaimInfoProps = {
+  totalClaimed: number
+  totalClaimable: number
+  grvtRewards: number
+}
+
+const ClaimInfo = ({
+  totalClaimed,
+  totalClaimable,
+  grvtRewards,
+}: ClaimInfoProps) => (
   <Flex>
     <Divider orientation="vertical" marginRight="30px" height="90%" />
     <Flex direction="column">
@@ -122,11 +138,11 @@ const IncomeInfo = () => {
   )
 }
 
-const getRandomInt = (max) => {
+const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max)
 }
 
-const getLabels = (dateRange) => {
+const getLabels = (dateRange: string) => {
   const labels = []
   let date
 
@@ -150,6 +166,15 @@ const getLabels = (dateRange) => {
   return labels.reverse()
 }
 
+type PoolHeaderProps = {
+  totalDeposit: number
+  poolShare: number
+  poolTvl: number
+  totalClaimed: number
+  totalClaimable: number
+  grvtRewards: number
+}
+
 /**
  * Component
  */
@@ -160,7 +185,7 @@ function PoolHeader({
   totalClaimed,
   totalClaimable,
   grvtRewards,
-}): JSX.Element {
+}: PoolHeaderProps): JSX.Element {
   const [isMobileRes] = useMediaQuery('(max-width: 767px)')
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
 

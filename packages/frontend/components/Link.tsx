@@ -1,9 +1,9 @@
-import { Link as ChakraLink } from '@chakra-ui/react'
+import { Link as ChakraLink, LinkProps } from '@chakra-ui/react'
 
 /**
  * Component
  */
-function Link({ children, href, ...rest }): JSX.Element {
+function Link({ children, href, ...rest }: LinkProps): JSX.Element {
   return (
     <ChakraLink
       href={href}

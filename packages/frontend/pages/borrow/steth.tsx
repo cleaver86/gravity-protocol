@@ -1,9 +1,8 @@
 import React from 'react'
 import Vessel from '../../components/layout/Vessel'
-import StethTokenIcon from '../../public/images/token-steth.svg'
 
 function Steth(): JSX.Element {
-  return <Vessel name="stETH" icon={<StethTokenIcon />} />
+  return <Vessel id="stETH" maxPersonalLtv={0.8} />
 }
 
 export default Steth
