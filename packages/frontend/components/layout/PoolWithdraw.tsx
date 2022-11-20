@@ -23,7 +23,7 @@ function PoolWithdraw({
   poolTvl,
 }: PoolWithdrawProps): JSX.Element {
   const [availableToWithdraw, setAvailableToWithdraw] = useState(totalDeposit)
-  const { control, handleSubmit, setValue, watch } = useForm<FormData>({
+  const { control, handleSubmit, watch } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
       withdrawalAmount: null,
@@ -41,7 +41,7 @@ function PoolWithdraw({
     } else {
       setAvailableToWithdraw(totalDeposit - withdrawalAmount)
     }
-  }, [withdrawalAmount])
+  }, [withdrawalAmount, totalDeposit])
 
   return (
     <SimpleGrid
@@ -54,14 +54,14 @@ function PoolWithdraw({
         <Controller
           control={control}
           name="withdrawalAmount"
-          render={({ field: { onChange, ...rest } }) => (
+          render={({ field: { onChange } }) => (
             <FormControl marginBottom="50px">
               <CurrencyInput
                 name="withdrawalAmount"
                 currency="VUSD"
                 label="Amount"
                 decimals={2}
-                available={getFormattedCurrency(totalDeposit, 2)}
+                available={getFormattedCurrency(availableToWithdraw, 2)}
                 isAllowed={(value) => {
                   return value == null || value <= totalDeposit
                 }}

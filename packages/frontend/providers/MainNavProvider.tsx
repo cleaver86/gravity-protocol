@@ -5,7 +5,7 @@ type MainNavContextProps = {
 }
 
 export const MainNavContext = createContext<MainNavContextProps>({
-  toggleMainNav: () => {},
+  toggleMainNav: () => {}, // eslint-disable-line
 })
 
 type MainNavProviderProps = {

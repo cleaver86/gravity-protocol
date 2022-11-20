@@ -13,9 +13,6 @@ import VesselCard from '../components/VesselCard'
 import Label from '../components/Label'
 import MonetaryText from '../components/MonetaryText'
 import { faArrowRightArrowLeft } from '@fortawesome/pro-regular-svg-icons'
-import EthTokenIcon from '../public/images/token-eth.svg'
-import RethTokenIcon from '../public/images/token-reth.svg'
-import StethTokenIcon from '../public/images/token-steth.svg'
 import {
   STATUS_SYSTEM_NORMAL,
   STATUS_SYSTEM_RECOVERY,

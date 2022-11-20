@@ -1,7 +1,6 @@
-import React, { FC, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { render, RenderOptions } from '@testing-library/react'
-// import { ThemeProvider } from 'my-ui-lib'
-import { ChakraProvider, systemProps } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 import { WalletProvider } from './providers/WalletProvider'
 import theme from './theme'
 

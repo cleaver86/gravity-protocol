@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import { Image } from '@chakra-ui/react'
 import {
   WALLET_PROVIDER_METAMASK,

@@ -1,7 +1,5 @@
 import { ethers } from 'ethers'
 import currency from 'currency.js'
-import { TOKENS } from '../constants'
-import { TokenMonetaryValues } from '../types'
 
 const RPC_MAINNET = 'https://rpc.ankr.com/eth'
 const CHAINLINK_ETH_USD_ADDRESS = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'
@@ -98,16 +96,19 @@ export async function getStethEthPrice() {
 }
 
 export async function getRethUsdPrice() {
-  const value = await fetch(
-    'https://api.coingecko.com/api/v3/simple/price?ids=rocket-pool-eth&vs_currencies=usd'
-  )
-  const json = await value.json()
+  // const value = await fetch(
+  //   'https://api.coingecko.com/api/v3/simple/price?ids=rocket-pool-eth&vs_currencies=usd'
+  // )
+  // const json = await value.json()
 
-  return json['rocket-pool-eth'].usd
+  // return json['rocket-pool-eth'].usd
+  return 1297.58;
 }
 
-export function getDefaultTokenValues() : TokenMonetaryValues {
-  return Object.keys(TOKENS).reduce((values, key) => { 
-    values[key as keyof TokenMonetaryValues] = 0; return values 
-  }, {} as TokenMonetaryValues);
+export async function getGrvtUsdPrice() {
+  return 35.0
+}
+
+export async function getVusdUsdPrice() {
+  return 1.0
 }

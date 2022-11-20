@@ -8,7 +8,6 @@ import {
   Flex,
   Spacer,
   VStack,
-  Text,
   Tooltip,
   useDisclosure,
   useMediaQuery,
@@ -272,14 +271,14 @@ function MainNav({ toggleNav, onToggleNav }: MainNavProps): JSX.Element {
       setDrawerAnimating(true)
       onOpen()
     }
-  }, [toggleNav])
+  }, [toggleNav, isOpen, onOpen])
 
   useEffect(() => {
     if (isOpen) {
       setDrawerAnimating(false)
       onToggleNav()
     }
-  }, [isOpen])
+  }, [isOpen, setDrawerAnimating, onToggleNav])
 
   return (
     <>

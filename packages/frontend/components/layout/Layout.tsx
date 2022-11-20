@@ -13,7 +13,7 @@ import { WalletProvider as WalletProviderType } from '../../types'
 // Extends `window` to add `ethereum`.
 declare global {
   interface Window {
-    ethereum: any
+    ethereum: import('ethers').providers.ExternalProvider
   }
 }
 

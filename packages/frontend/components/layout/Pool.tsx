@@ -25,12 +25,6 @@ import { faScaleBalanced, faBars } from '@fortawesome/pro-regular-svg-icons'
 function Pool(): JSX.Element {
   const mainNavContext = useContext(MainNavContext)
   const walletContext = useContext(WalletContext)
-
-  // TODO Get rid of this
-  if (!walletContext) {
-    return <></>
-  }
-
   const { balances, prices } = walletContext
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
   const ETH_AMOUNT_TEMP = 1.65

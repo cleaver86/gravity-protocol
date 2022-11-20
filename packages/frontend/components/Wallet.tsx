@@ -6,12 +6,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Button,
   ExpandedIndex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Flex,
   Spacer,
   StackDivider,
@@ -19,109 +14,32 @@ import {
   VStack,
   useMediaQuery,
 } from '@chakra-ui/react'
-import { shortenAddress } from '@usedapp/core'
-import { WalletProvider } from '../types'
+import { TOKENS } from '../constants'
+import {
+  WalletContextProps,
+  WalletProvider,
+  TokenMonetaryValues,
+} from '../types'
 import { WalletContext } from '../providers/WalletProvider'
 import { getFormattedCurrency } from '../utils/currency'
-import Link from './Link'
+import AccountDropdown from './WalletAccountDropdown'
+import WalletToken from './WalletToken'
 import Label from './Label'
 import TokenIcon from './TokenIcon'
-import WalletIcon from './WalletIcon'
-import FaIcon from './FaIcon'
-import { faAngleDown } from '@fortawesome/pro-solid-svg-icons'
 
-type WalletProps = WalletProvider & {
-  account: string
-  deactivate: () => void
-}
-
-const AccountDropdown = ({ name, account, deactivate }: WalletProps) => (
-  <Box top="11px" right="20px" zIndex="100">
-    <Menu placement="bottom-end">
-      <MenuButton
-        as={Button}
-        bg="none"
-        border="1px solid"
-        borderColor="gray.500"
-        paddingLeft="10px"
-        paddingRight="15px"
-        fontSize="sm"
-        fontWeight="medium"
-        _hover={{
-          background: 'purple.500',
-          borderColor: 'purple.500',
-        }}
-        _active={{ background: 'purple.500' }}
-      >
-        <Flex alignItems={'center'}>
-          <WalletIcon name={name} />
-          <Text color="gray.100">{shortenAddress(account)}</Text>
-          <Box marginLeft={'10px'}>
-            <FaIcon icon={faAngleDown} height="18px" />
-          </Box>
-        </Flex>
-      </MenuButton>
-      <MenuList bg="purple.500" border="none">
-        <MenuItem onClick={deactivate} _hover={{ background: 'purple.400' }}>
-          Disconnect
-        </MenuItem>
-      </MenuList>
-    </Menu>
-  </Box>
-)
-
-type WalletContentProps = {
-  balances: {
-    grvt: number
-    vusd: number
-    eth: number
-    reth: number
-    steth: number
-  }
-  prices: {
-    grvt: number
-    vusd: number
-    eth: number
-    reth: number
-    steth: number
-  }
-  total: number
-}
-
-const WalletContent = ({ balances, prices, total }: WalletContentProps) => (
+const WalletContent = ({ balances, prices, total }: WalletContextProps) => (
   <Flex h="100%" direction="column" justifyContent="space-between">
     <Flex direction={'column'} padding="0 20px">
       <VStack divider={<StackDivider borderColor="gray.500" />} align="stretch">
-        <Token
-          label="GRVT"
-          icon={<TokenIcon id="grvt" />}
-          balance={balances['grvt']}
-          usd={prices['grvt']}
-        />
-        <Token
-          label="VUSD"
-          icon={<TokenIcon id="vusd" />}
-          balance={balances['vusd']}
-          usd={prices['vusd']}
-        />
-        <Token
-          label="ETH"
-          icon={<TokenIcon id="eth" />}
-          balance={balances['eth']}
-          usd={prices['eth']}
-        />
-        <Token
-          label="rETH"
-          icon={<TokenIcon id="reth" />}
-          balance={balances['reth']}
-          usd={prices['reth']}
-        />
-        <Token
-          label="stETH"
-          icon={<TokenIcon id="steth" />}
-          balance={balances['steth']}
-          usd={prices['steth']}
-        />
+        {Object.keys(TOKENS).map((key) => (
+          <WalletToken
+            key={key}
+            label={key.toUpperCase()}
+            icon={<TokenIcon id={key} />}
+            balance={balances[key as keyof TokenMonetaryValues]}
+            usd={prices[key as keyof TokenMonetaryValues]}
+          />
+        ))}
       </VStack>
     </Flex>
     <Spacer />
@@ -139,56 +57,9 @@ const WalletContent = ({ balances, prices, total }: WalletContentProps) => (
   </Flex>
 )
 
-type TokenProps = {
-  label: string
-  icon: React.ReactNode
-  balance: number
-  usd: number
-}
-
-const Token = ({ label, icon, balance, usd }: TokenProps) => {
-  return (
-    <Flex>
-      <Flex alignItems={'center'} paddingRight="10px">
-        <Box h="30px" w="30px">
-          {icon}
-        </Box>
-      </Flex>
-      <Flex w="100%">
-        <Box>
-          <Flex alignItems="baseLine">
-            <Text
-              data-testid={`${label}-balance`}
-              fontSize="md"
-              fontWeight="medium"
-            >
-              {getFormattedCurrency(balance, 6)}
-            </Text>
-            <Text fontSize="sm" fontWeight="medium" marginLeft="5px">
-              {label}
-            </Text>
-          </Flex>
-          <Text data-testid={`${label}-total`} fontSize="sm" color="gray.300">
-            {getFormattedCurrency(balance * usd, 2, '$')}
-          </Text>
-        </Box>
-        <Spacer />
-        <Box textAlign="right">
-          <Text data-testid={`${label}-price`} fontSize="sm" color="gray.300">
-            {getFormattedCurrency(usd, 2, '$')}
-          </Text>
-          <Link
-            href={`https://curve.fi/${label.toLowerCase()}`}
-            fontSize="sm"
-            fontWeight="medium"
-            marginLeft="5px"
-          >
-            Buy
-          </Link>
-        </Box>
-      </Flex>
-    </Flex>
-  )
+type WalletProps = WalletProvider & {
+  account: string
+  deactivate: () => void
 }
 
 /**

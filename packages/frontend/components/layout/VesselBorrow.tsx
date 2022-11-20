@@ -72,7 +72,7 @@ function VesselBorrow({
     }
 
     setValue('borrow', null)
-  }, [depositedCollateral, balance, price, name, setValue])
+  }, [depositedCollateral, balance, price, name, maxPersonalLtv, setValue])
 
   useEffect(() => {
     if (borrowMode === 'leverage') {

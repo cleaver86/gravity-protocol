@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useEtherBalance, useTokenBalance } from '@usedapp/core'
-import { BigNumber, BigNumberish, utils } from 'ethers'
+import { BigNumberish, utils } from 'ethers'
 import currency from 'currency.js'
 import { TokenMonetaryValues } from '../types'
+import { getDefaultTokenValues } from '../utils/general'
 import {
   CURRENCY_USD,
   TOKENS,
@@ -13,10 +14,11 @@ import {
 } from '../constants'
 import useInterval from './useInterval'
 import {
+  getGrvtUsdPrice,
+  getVusdUsdPrice,
   getEthUsdPrice,
   getStethEthPrice,
   getRethUsdPrice,
-  getDefaultTokenValues,
 } from '../utils/prices'
 
 type Token = {
@@ -54,16 +56,16 @@ const erc20Tokens = [
     address: TOKEN_ADDRESS_GRVT,
     priceCurrency: CURRENCY_USD,
     precision: 6,
-    useBalance: () => BigNumber.from('0x00'), //BigNumber.from('0x3019682D372367546')
-    getPrice: () => 35.0,
+    useBalance: useTokenBalance, //BigNumber.from('0x3019682D372367546')
+    getPrice: getGrvtUsdPrice,
   },
   {
     name: TOKENS.vusd,
     address: TOKEN_ADDRESS_VUSD,
     priceCurrency: CURRENCY_USD,
-    precision: 2,
-    useBalance: () => BigNumber.from('0x00'), //BigNumber.from('0x194672999D372367546')
-    getPrice: () => 1.0,
+    precision: 6,
+    useBalance: useTokenBalance, //BigNumber.from('0x194672999D372367546')
+    getPrice: getVusdUsdPrice,
   },
   {
     name: TOKENS.reth,
@@ -105,57 +107,58 @@ const getBalances = (account: string): TokenMonetaryValues => {
   )
 }
 
-const useWallet = (account: string) => {
-  const [prices, setPrices] = useState<TokenMonetaryValues>(
-    getDefaultTokenValues
-  )
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const balances = getBalances(account)
-  const getPricesAndTotal = async () => {
-    setLoading(true)
-
-    const ethUsdPrice = await ethToken.getPrice()
-    let total = ethUsdPrice * balances[TOKENS.eth as keyof TokenMonetaryValues]
-    const erc20TokenPrices = await Promise.all(
-      erc20Tokens.map(async ({ name, getPrice, priceCurrency }) => {
-        let price = await getPrice()
-
-        // Convert prices in ETH to USD (eg. stETH)
-        if (priceCurrency === TOKENS.eth) {
-          price = currency(ethUsdPrice * price).value
-        }
-
-        total += balances[name as keyof TokenMonetaryValues] * price
-
-        return { name, price }
-      })
-    )
-
-    const prices = erc20TokenPrices.reduce(
-      (r: TokenMonetaryValues, { name, price }): TokenMonetaryValues => {
-        r[name as keyof TokenMonetaryValues] = price
-        return r
-      },
-      {
-        [TOKENS.eth]: ethUsdPrice,
-      } as TokenMonetaryValues
-    )
-
-    setPrices(prices)
-    setTotal(total)
-    setLoading(false)
+const getPrices = async () => {
+  const prices: TokenMonetaryValues = {
+    ...getDefaultTokenValues(),
+    [TOKENS.eth]: await ethToken.getPrice(),
+  }
+  for await (const { name, priceCurrency, getPrice } of erc20Tokens) {
+    let price = await getPrice()
+    // Convert prices in ETH to USD (eg. stETH)
+    if (priceCurrency === TOKENS.eth) {
+      price = currency(
+        prices[TOKENS.eth as keyof TokenMonetaryValues] * price
+      ).value
+    }
+    prices[name as keyof TokenMonetaryValues] = price
   }
 
+  return prices
+}
+
+const useWallet = (account: string) => {
+  const [prices, setPrices] = useState<TokenMonetaryValues>(
+    getDefaultTokenValues()
+  )
+  const [total, setTotal] = useState(0)
+  const balances = getBalances(account)
+  const updatePrices = useCallback(async () => {
+    const updatedPrices = await getPrices()
+    setPrices(updatedPrices)
+  }, [])
+  const updateTotal = useCallback(() => {
+    const t = Object.keys(prices).reduce((acc, key) => {
+      const balance = balances[key as keyof TokenMonetaryValues]
+      const price = prices[key as keyof TokenMonetaryValues]
+      return acc + balance * price
+    }, 0)
+
+    setTotal(t)
+  }, [balances, prices])
+
   useInterval(() => {
-    getPricesAndTotal()
+    updatePrices()
   }, 10000)
 
   useEffect(() => {
-    getPricesAndTotal()
-  }, [])
+    updatePrices()
+  }, [updatePrices])
 
-  return { loading, balances, prices, total }
+  useEffect(() => {
+    updateTotal()
+  }, [updateTotal, prices])
+
+  return { balances, prices, total }
 }
 
 export default useWallet

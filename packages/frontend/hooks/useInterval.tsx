@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 
-/* istanbul ignore next */
 /** keep typescript happy */
+// eslint-disable-next-line
 const noop = () => {}
 
-const useInterval = (callback: () => void, delay: number = 1000) => {
+const useInterval = (callback: () => void, delay = 1000) => {
   const savedCallback = useRef(noop)
 
   // Remember the latest callback.

@@ -11,7 +11,6 @@ import {
   Tr,
   Th,
   Td,
-  useMediaQuery,
 } from '@chakra-ui/react'
 import Summary, { SubItemType as SummarySubItemType } from '../Summary'
 import { getFormattedCurrency } from '../../utils/currency'
@@ -93,7 +92,6 @@ type Props = {
  * Component
  */
 function PoolClaim({ claimableAssets }: Props): JSX.Element {
-  const [isSmallRes] = useMediaQuery('(max-width: 992px)')
   const [checkedAssetIndexes, setCheckedAssetIndexes] = useState<Set<number>>(
     new Set(claimableAssets.map((a, i) => i))
   )
@@ -420,7 +418,7 @@ function PoolClaim({ claimableAssets }: Props): JSX.Element {
                 hidden: checkedToVesselIndexes.size === 0,
                 subItems: claimableAssets.reduce(
                   (previousValue, currentValue, i) => {
-                    let arr = [...previousValue]
+                    const arr = [...previousValue]
                     if (
                       checkedAssetIndexes.has(i) &&
                       checkedToVesselIndexes.has(i)
@@ -471,9 +469,7 @@ function PoolClaim({ claimableAssets }: Props): JSX.Element {
                       id: 'poolVusd',
                       label: 'Pool VUSD',
                       tooltip: 'Some Tooltip',
-                      onChange: () => {
-                        console.log(123)
-                      },
+                      onChange: () => {}, // eslint-disable-line
                     },
                   ]
                 : []

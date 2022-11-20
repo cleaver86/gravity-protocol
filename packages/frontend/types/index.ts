@@ -8,7 +8,10 @@ import {
   WALLET_PROVIDER_WALLETCONNECT,
 } from '../constants'
 
-export type StatusType = typeof STATUS_SYSTEM_NORMAL | typeof STATUS_SYSTEM_CAUTION | typeof STATUS_SYSTEM_RECOVERY
+export type StatusType =
+  | typeof STATUS_SYSTEM_NORMAL
+  | typeof STATUS_SYSTEM_CAUTION
+  | typeof STATUS_SYSTEM_RECOVERY
 
 export type Vessel = {
   id: string
@@ -26,8 +29,17 @@ export type Vessel = {
   maxPersonalLtv: number
 }
 
+export type WalletContextProps = {
+  balances: TokenMonetaryValues
+  prices: TokenMonetaryValues
+  total: number
+}
+
 export type WalletProvider = {
-  name: typeof WALLET_PROVIDER_METAMASK | typeof WALLET_PROVIDER_COINBASE | typeof WALLET_PROVIDER_WALLETCONNECT
+  name:
+    | typeof WALLET_PROVIDER_METAMASK
+    | typeof WALLET_PROVIDER_COINBASE
+    | typeof WALLET_PROVIDER_WALLETCONNECT
 }
 
 export type TokenMonetaryValues = { [key in keyof typeof TOKENS]: number }

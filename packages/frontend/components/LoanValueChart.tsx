@@ -77,7 +77,7 @@ function LoanValueChart({
 
       chart.update()
     }
-  }, [personalLtv, maxPersonalLtv])
+  }, [personalLtv, maxPersonalLtv, systemLtv])
 
   return (
     <Box transform="rotateY(180deg);">

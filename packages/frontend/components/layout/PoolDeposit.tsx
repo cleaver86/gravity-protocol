@@ -5,7 +5,6 @@ import CurrencyInput from '../CurrencyInput'
 import Summary from '../Summary'
 import Alert from '../Alert'
 import { getCurrency, getFormattedCurrency } from '../../utils/currency'
-import { values } from 'lodash'
 
 type Props = {
   vusdBalance: number
@@ -26,7 +25,7 @@ function PoolDeposit({
   poolTvl,
 }: Props): JSX.Element {
   const [availableVusd, setAvailableVusd] = useState(vusdBalance)
-  const { control, handleSubmit, setValue, watch } = useForm<FormData>({
+  const { control, handleSubmit, watch } = useForm<FormData>({
     mode: 'onChange',
     defaultValues: {
       depositedAmount: null,
@@ -44,7 +43,7 @@ function PoolDeposit({
     } else {
       setAvailableVusd(vusdBalance - depositedAmount)
     }
-  }, [depositedAmount])
+  }, [depositedAmount, vusdBalance])
 
   return (
     <SimpleGrid
@@ -57,7 +56,7 @@ function PoolDeposit({
         <Controller
           control={control}
           name="depositedAmount"
-          render={({ field: { onChange, ...rest } }) => (
+          render={({ field: { onChange } }) => (
             <FormControl marginBottom="50px">
               <CurrencyInput
                 name="depositedAmount"
