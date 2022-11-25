@@ -33,7 +33,7 @@ type VesselProps = {
  * Component
  */
 function Vessel({ id, maxPersonalLtv }: VesselProps): JSX.Element {
-  const { toggleMainNav } = useContext(MainNavContext)
+  const { openMainNavDrawer } = useContext(MainNavContext)
   const { balances, prices } = useContext(WalletContext)
   const [isSmallRes] = useMediaQuery('(max-width: 992px)')
   // TODO Remove vessel fixtures and index logic
@@ -140,7 +140,7 @@ function Vessel({ id, maxPersonalLtv }: VesselProps): JSX.Element {
             icon={<FaIcon height="24px" icon={faBars} />}
             aria-label="toggle-main-nav"
             onClick={() => {
-              toggleMainNav()
+              openMainNavDrawer()
             }}
           />
         </Flex>

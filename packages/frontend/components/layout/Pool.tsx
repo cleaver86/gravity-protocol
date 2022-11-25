@@ -123,7 +123,7 @@ function Pool(): JSX.Element {
             icon={<FaIcon height="24px" icon={faBars} />}
             aria-label="toggle-main-nav"
             onClick={() => {
-              mainNavContext && mainNavContext.toggleMainNav()
+              mainNavContext && mainNavContext.openMainNavDrawer()
             }}
           />
         </Flex>

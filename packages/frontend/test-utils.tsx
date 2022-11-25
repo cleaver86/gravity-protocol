@@ -13,6 +13,7 @@ const AllTheProviders = ({ children, account }: Providers) => {
   if (!account) {
     throw new Error('AllTheProviders: account must be provided')
   }
+
   return (
     <ChakraProvider theme={theme}>
       <WalletProvider account={account}>{children}</WalletProvider>

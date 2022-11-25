@@ -28,7 +28,7 @@ const SummaryLabel = ({
   muted = false,
   tooltip,
 }: SummaryLabelProps) => (
-  <Flex alignItems="center" marginBottom="10px">
+  <Flex alignItems="center" marginBottom="5px">
     {tooltip && (
       <Tooltip label={tooltip} borderRadius="3px">
         <Box marginTop="-2px" marginRight="5px">
@@ -157,8 +157,10 @@ const Summary = ({
                             {value}
                           </SummaryText>
                         </Td>
-                        <Td w="50px" paddingLeft="10px" textAlign="left">
-                          <SummaryText fontSize="sm">{symbol}</SummaryText>
+                        <Td w="50px" paddingLeft="10px">
+                          <SummaryText fontSize="sm" align="left">
+                            {symbol}
+                          </SummaryText>
                         </Td>
                       </Tr>
                       {subItems && (
@@ -188,9 +190,8 @@ const Summary = ({
                                   padding="0.25rem 0"
                                   w="50px"
                                   paddingLeft="10px"
-                                  textAlign="left"
                                 >
-                                  <SummaryText fontSize="sm">
+                                  <SummaryText fontSize="sm" align="left">
                                     {item.symbol}
                                   </SummaryText>
                                 </Td>

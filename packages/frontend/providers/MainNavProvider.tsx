@@ -1,24 +1,24 @@
 import { createContext } from 'react'
 
 type MainNavContextProps = {
-  toggleMainNav: () => void
+  openMainNavDrawer: () => void
 }
 
 export const MainNavContext = createContext<MainNavContextProps>({
-  toggleMainNav: () => {}, // eslint-disable-line
+  openMainNavDrawer: () => {}, // eslint-disable-line
 })
 
 type MainNavProviderProps = {
   children: React.ReactNode
-  toggleMainNav: () => void
+  openMainNavDrawer: () => void
 }
 
 export const MainNavProvider = ({
   children,
-  toggleMainNav,
+  openMainNavDrawer,
 }: MainNavProviderProps): JSX.Element => {
   return (
-    <MainNavContext.Provider value={{ toggleMainNav }}>
+    <MainNavContext.Provider value={{ openMainNavDrawer }}>
       {children}
     </MainNavContext.Provider>
   )

@@ -57,8 +57,8 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
           >
             <Gradiant />
             <MainNav
-              toggleNav={toggleNav}
-              onToggleNav={() => {
+              openDrawer={toggleNav}
+              onOpenDrawer={() => {
                 setToggleNav(false)
               }}
             />
@@ -78,7 +78,7 @@ const Layout = ({ children, customMeta }: LayoutProps): JSX.Element => {
               }}
             >
               <MainNavProvider
-                toggleMainNav={() => {
+                openMainNavDrawer={() => {
                   setToggleNav(true)
                 }}
               >

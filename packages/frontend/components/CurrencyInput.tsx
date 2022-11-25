@@ -108,6 +108,7 @@ function CurrencyInput({
   currency,
   available,
   decimals = 2,
+  onClickPercentage,
   onValueChange,
   isAllowed,
 }: CurrencyInputProps): JSX.Element {
@@ -121,6 +122,7 @@ function CurrencyInput({
       allowLeadingZeros={false}
       allowNegative={false}
       decimalScale={decimals}
+      onClickPercentage={onClickPercentage}
       thousandSeparator=","
       placeholder="0.00"
       onValueChange={({ floatValue }) => {

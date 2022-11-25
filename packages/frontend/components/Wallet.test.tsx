@@ -265,7 +265,7 @@ describe('Wallet', () => {
   })
 })
 
-describe('Wallet max width 1280', () => {
+describe('Wallet at less than 1280px wide', () => {
   // TODO Figure out how to do snapshots with dynamically generated ids from Chakra UI
   test.skip('Should match snapshot', async () => {
     mockUseMediaQuery.mockReturnValue([true])

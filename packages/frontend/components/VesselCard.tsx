@@ -44,7 +44,7 @@ const Vessel = ({
         }}
       >
         <Box padding={{ base: '20px 20px', md: '20px 30px' }} minHeight="280px">
-          <Flex alignItems="flex-end" marginBottom="40px">
+          <Flex alignItems="flex-start" marginBottom="40px">
             <TokenHeading id={id} paddingLeft="15px">
               {display} Vessel
             </TokenHeading>

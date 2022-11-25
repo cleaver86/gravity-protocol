@@ -8,6 +8,7 @@ import {
   Flex,
   Spacer,
   VStack,
+  Text,
   Tooltip,
   useDisclosure,
   useMediaQuery,
@@ -61,43 +62,44 @@ const NavItem = ({
   const hoverColor = active ? 'purple.300' : 'white'
 
   return (
-    <NextLink href={route} passHref>
-      <Flex
-        role="group"
-        borderRadius="40px"
-        alignItems="center"
-        marginTop="5px !important"
-        padding={{ base: '0 20px 0 10px', xl: '0', '2xl': '0 20px 0 10px' }}
-        _hover={{ background: 'purple.500', cursor: 'pointer' }}
-      >
-        <Tooltip label={text} placement="right" isDisabled={disableTooltip}>
-          <Flex
-            w="50px"
-            h="50px"
-            justifyContent="center"
-            alignItems="center"
-            padding="10px"
-          >
-            <FaIcon
-              height="23px"
-              icon={icon}
-              color={color}
-              _groupHover={{ color: hoverColor }}
-            />
-          </Flex>
-        </Tooltip>
-        <Link
-          color={color}
-          fontWeight="medium"
-          marginLeft="10px"
-          marginTop="3px"
-          _groupHover={{ color: hoverColor, textDecoration: 'none' }}
-          display={{ base: 'inline', xl: 'none', '2xl': 'inline' }}
-          as="p"
+    <NextLink href={route} legacyBehavior passHref>
+      <a role="link">
+        <Flex
+          borderRadius="40px"
+          alignItems="center"
+          marginTop="5px !important"
+          padding={{ base: '0 20px 0 10px', xl: '0', '2xl': '0 20px 0 10px' }}
+          _hover={{ background: 'purple.500', cursor: 'pointer' }}
         >
-          {text}
-        </Link>
-      </Flex>
+          <Tooltip label={text} placement="right" isDisabled={disableTooltip}>
+            <Flex
+              data-testid={`${text.toLowerCase()}-tooltip-container`}
+              w="50px"
+              h="50px"
+              justifyContent="center"
+              alignItems="center"
+              padding="10px"
+            >
+              <FaIcon
+                height="23px"
+                icon={icon}
+                color={color}
+                _groupHover={{ color: hoverColor }}
+              />
+            </Flex>
+          </Tooltip>
+          <Text
+            color={color}
+            fontWeight="medium"
+            marginLeft="10px"
+            marginTop="3px"
+            _groupHover={{ color: hoverColor, textDecoration: 'none' }}
+            display={{ base: 'inline', xl: 'none', '2xl': 'inline' }}
+          >
+            {text}
+          </Text>
+        </Flex>
+      </a>
     </NextLink>
   )
 }
@@ -115,7 +117,7 @@ const SocialIconLink = ({
   tooltip,
   tooltipPlacement,
 }: SocialIconLinkProps): JSX.Element => (
-  <Link href={href} role="group" padding={{ base: '2px 0', '2xl': '0' }}>
+  <Link href={href} role="link" padding={{ base: '2px 0', '2xl': '0' }}>
     <Tooltip label={tooltip} placement={tooltipPlacement}>
       <Flex
         w="50px"
@@ -169,20 +171,25 @@ const Nav = ({ disableTooltip = false }: NavProps): JSX.Element => {
             }}
             _hover={{ cursor: 'pointer' }}
           >
-            <NextLink href="/">
-              <GravityLogo />
+            <NextLink href="/" legacyBehavior passHref>
+              <a data-testid="gravity-logo-link">
+                <GravityLogo />
+              </a>
             </NextLink>
           </Box>
           <Box
             display={{ base: 'none', xl: 'block', '2xl': 'none' }}
             _hover={{ cursor: 'pointer' }}
           >
-            <NextLink href="/">
-              <GravityIcon />
+            <NextLink href="/" legacyBehavior passHref>
+              <a data-testid="gravity-logo-link">
+                <GravityIcon />
+              </a>
             </NextLink>
           </Box>
         </Box>
         <VStack
+          role="navigation"
           alignItems="left"
           marginTop="50px"
           marginLeft={{ base: '-50px', xl: '0', '2xl': '-50px' }}
@@ -253,32 +260,32 @@ const Nav = ({ disableTooltip = false }: NavProps): JSX.Element => {
 }
 
 type MainNavProps = {
-  toggleNav: boolean
-  onToggleNav: () => void
+  openDrawer: boolean
+  onOpenDrawer: () => void
 }
 
 /**
  * Component
  */
-function MainNav({ toggleNav, onToggleNav }: MainNavProps): JSX.Element {
+function MainNav({ openDrawer, onOpenDrawer }: MainNavProps): JSX.Element {
   const [isLargeRes] = useMediaQuery('(min-width: 1280px)')
   const [isExtraLargeRes] = useMediaQuery('(min-width: 1536px)')
   const [drawerAnimating, setDrawerAnimating] = useState(true)
   const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: false })
 
   useEffect(() => {
-    if (toggleNav && !isOpen) {
+    if (openDrawer && !isOpen) {
       setDrawerAnimating(true)
       onOpen()
     }
-  }, [toggleNav, isOpen, onOpen])
+  }, [openDrawer, isOpen, onOpen])
 
   useEffect(() => {
     if (isOpen) {
       setDrawerAnimating(false)
-      onToggleNav()
+      onOpenDrawer()
     }
-  }, [isOpen, setDrawerAnimating, onToggleNav])
+  }, [isOpen, setDrawerAnimating, onOpenDrawer])
 
   return (
     <>
