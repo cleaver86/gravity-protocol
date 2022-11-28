@@ -44,7 +44,6 @@ function VesselBorrow({
   price,
   maxPersonalLtv,
 }: Props): JSX.Element {
-  const [availableCollateral, setAvailableCollateral] = useState(balance)
   const [maxBorrowAmount, setMaxBorrowAmount] = useState(0)
   const [borrowMode, setBorrowMode] = useState('normal')
   const [leverage, setLeverage] = useState(0)
@@ -64,14 +63,11 @@ function VesselBorrow({
 
   useEffect(() => {
     if (depositedCollateral == null || depositedCollateral <= 0) {
-      setAvailableCollateral(balance)
       setMaxBorrowAmount(0)
+      setValue('borrow', null)
     } else {
-      setAvailableCollateral(balance - depositedCollateral)
       setMaxBorrowAmount(depositedCollateral * price * maxPersonalLtv)
     }
-
-    setValue('borrow', null)
   }, [depositedCollateral, balance, price, name, maxPersonalLtv, setValue])
 
   useEffect(() => {
@@ -81,6 +77,8 @@ function VesselBorrow({
       setLeverage(0)
     }
   }, [borrowMode])
+
+  console.log(borrow)
 
   return (
     <SimpleGrid
@@ -93,20 +91,21 @@ function VesselBorrow({
         <Controller
           control={control}
           name="collateral"
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <FormControl marginBottom="50px">
               <CurrencyInput
                 name="collateral"
                 currency="ETH"
                 label="Deposit Collateral"
                 decimals={6}
-                available={getFormattedCurrency(availableCollateral, 6)}
+                value={value}
+                available={getFormattedCurrency(balance, 6)}
                 isAllowed={(value) => {
                   return value == null || value <= balance
                 }}
                 onValueChange={onChange}
                 onClickPercentage={(percentage) => {
-                  onChange(getCurrency(balance * percentage))
+                  onChange(getCurrency(balance * percentage, 6))
                 }}
               />
             </FormControl>
@@ -151,8 +150,7 @@ function VesselBorrow({
           <Controller
             control={control}
             name="borrow"
-            render={({ field: { onChange } }) => {
-              const borrowAmount = borrow || 0
+            render={({ field: { onChange, value } }) => {
               return (
                 <FormControl marginBottom="50px">
                   <CurrencyInput
@@ -160,14 +158,10 @@ function VesselBorrow({
                     currency="VUSD"
                     label="Borrow Amount"
                     decimals={2}
-                    available={getFormattedCurrency(
-                      maxBorrowAmount - borrowAmount,
-                      2
-                    )}
+                    value={value}
+                    available={getFormattedCurrency(maxBorrowAmount, 2)}
                     isAllowed={(value) => {
-                      return (
-                        value == null || value <= maxBorrowAmount - borrowAmount
-                      )
+                      return value == null || value <= maxBorrowAmount
                     }}
                     onValueChange={onChange}
                     onClickPercentage={(percentage) => {

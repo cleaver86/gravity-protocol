@@ -14,6 +14,7 @@ import Input from './Input'
 type InputWrapperProps = InputProps & {
   currency: string
   label: string
+  value: number | null
   available: string
   onClickPercentage?: (arg0: number) => void
 }
@@ -21,6 +22,7 @@ type InputWrapperProps = InputProps & {
 type CurrencyInputProps = InputProps & {
   currency: string
   label: string
+  value: number | null
   available: string
   decimals?: number
   onClickPercentage?: (arg0: number) => void
@@ -106,6 +108,7 @@ function CurrencyInput({
   name,
   label,
   currency,
+  value,
   available,
   decimals = 2,
   onClickPercentage,
@@ -118,6 +121,7 @@ function CurrencyInput({
       name={name}
       label={label}
       currency={currency}
+      value={value}
       available={available}
       allowLeadingZeros={false}
       allowNegative={false}
